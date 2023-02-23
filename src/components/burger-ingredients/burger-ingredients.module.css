@@ -1,0 +1,35 @@
+.container {
+  grid-column: 1/2;
+}
+
+.ingredientsSectionsConatiner {
+  height: calc(100vh - 284px);
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: #2f2f37 #8585AD;
+}
+
+.ingredientsSectionsConatiner::-webkit-scrollbar {
+  width: 8px;
+
+}
+.ingredientsSectionsConatiner::-webkit-scrollbar-track {
+  background-color: #2f2f37;
+}
+
+.ingredientsSectionsConatiner::-webkit-scrollbar-thumb {
+  background-color: #8585AD;
+}
+
+.categorySection {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.categoryHeading {
+  width: 100%;
+}
+
+.tabContainer {
+  display: flex;
+}
