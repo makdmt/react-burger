@@ -31,6 +31,8 @@
 }
 
 .button:hover {
+
+  /* color: white; */
   opacity: .6;
 }
 

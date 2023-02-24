@@ -1,50 +1,56 @@
 import PropTypes from 'prop-types';
 
-function arrangeByCategory(arrayOfObjects, category) {
+// function arrangeByCategory(arrayOfObjects, category) {
 
-  const sortedArray = arrayOfObjects.slice();
+//   const sortedArray = arrayOfObjects.slice();
 
-  sortedArray.sort(function (a, b) {
-    if (a[category] < b[category]) return -1;
-    if (a[category] > b[category]) return 1;
-    return 0;
-  });
+//   sortedArray.sort(function (a, b) {
+//     if (a[category] < b[category]) return -1;
+//     if (a[category] > b[category]) return 1;
+//     return 0;
+//   });
 
-  const elementsArrangedByCategories = [];
-  let elementsInCurrentCategory = [];
-  let prevElementCategory = sortedArray[0][category];
+//   const elementsArrangedByCategories = [];
+//   let elementsInCurrentCategory = [];
+//   let prevElementCategory = sortedArray[0][category];
 
-  sortedArray.forEach((elm, index) => {
-    if (elm[category] === prevElementCategory) {
-      elementsInCurrentCategory.push(elm);
-      if (index === (sortedArray.length - 1)) {
-        elementsArrangedByCategories.push(elementsInCurrentCategory)
-        elementsInCurrentCategory = [];
-      }
-    } else {
-      if (index === (sortedArray.length - 1)) {
-        elementsInCurrentCategory.push(elm);
-        elementsArrangedByCategories.push(elementsInCurrentCategory)
-        elementsInCurrentCategory = [];
-        return elementsArrangedByCategories;
-      }
-      elementsArrangedByCategories.push(elementsInCurrentCategory);
-      prevElementCategory = elm[category];
-      elementsInCurrentCategory = [];
-    }
-  })
+//   sortedArray.forEach((elm, index) => {
+//     if (elm[category] === prevElementCategory) {
+//       elementsInCurrentCategory.push(elm);
+//       if (index === (sortedArray.length - 1)) {
+//         elementsArrangedByCategories.push(elementsInCurrentCategory)
+//         elementsInCurrentCategory = [];
+//       }
+//     } else {
+//       if (index === (sortedArray.length - 1)) {
+//         elementsInCurrentCategory.push(elm);
+//         elementsArrangedByCategories.push(elementsInCurrentCategory)
+//         elementsInCurrentCategory = [];
+//         return elementsArrangedByCategories;
+//       }
+//       elementsArrangedByCategories.push(elementsInCurrentCategory);
+//       prevElementCategory = elm[category];
+//       elementsInCurrentCategory = [];
+//     }
+//   })
 
-  return elementsArrangedByCategories;
-}
+//   return elementsArrangedByCategories;
+// }
 
 const ingredientPropType = PropTypes.shape({
   name: PropTypes.string.isRequired,
   image: PropTypes.string.isRequired,
   price: PropTypes.number.isRequired,
   type: PropTypes.string,
+  _id: PropTypes.string,
+  proteins: PropTypes.number,
+  fat: PropTypes.number,
+  carbohydrates: PropTypes.number,
+  calories: PropTypes.number,
+  image_mobile: PropTypes.string,
+  image_large: PropTypes.string,
+  __v: PropTypes.number,
   isLocked: PropTypes.bool,
-  extraClass: PropTypes.string,
-  handleClose: PropTypes.func
 });
 
 
@@ -261,4 +267,4 @@ const ingredients = [
   }
 ]
 
-export { ingredients, ingredientPropType, arrangeByCategory };
+export { ingredients, ingredientPropType };

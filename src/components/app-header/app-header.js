@@ -18,9 +18,9 @@ class AppHeader extends React.Component {
             Лента заказов
           </button>
         </nav>
-        <div className={`${headerStyles.logo} ` }>
+        <a href='#' className={`${headerStyles.logo} ` }>
           <Logo height='40' />
-        </div>
+        </a>
         <button className={`${headerStyles.button} ${headerStyles.lkButton} text text_type_main-default text_color_inactive pl-5 pr-5 mt-4 mb-4`} type='button'>
           <ProfileIcon type={'secondary'} />
           Личный кабинет
