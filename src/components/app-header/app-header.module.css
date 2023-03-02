@@ -1,0 +1,48 @@
+.header {
+    padding-left: clamp(0px, calc((100vw - 1280px)/2), 1000px);
+    padding-right: clamp(0px, calc((100vw - 1280px)/2), 1000px);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    width: 100%;
+    background-color: #1c1c21;
+}
+
+.logo {
+  justify-self: center;
+  margin: 0 auto;
+}
+
+.button {
+  background-color: unset;
+  /* margin: 0;
+  padding: 0; */
+  height: 56px;
+  border-radius: 40px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  /* color: unset; */
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all .3s ease-in;
+}
+
+.button:hover {
+
+  /* color: white; */
+  opacity: .6;
+}
+
+.menu {
+    grid-column: 1/2;
+    justify-self: start;
+    display: flex;
+}
+
+.lkButton {
+  grid-column: 3/4;
+  justify-self: end;
+}
