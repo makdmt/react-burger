@@ -11,20 +11,19 @@ import { ingredientPropType } from '../../utils/data';
 
 function BurgerIngredients({ products }) {
 
-
   const sectionTitlesObj = {
     bun: 'Булки',
     main: 'Начинки',
-    sause: 'Соусы'
+    sauce: 'Соусы'
   }
 
   const sectionTitlesArr = Object.entries(sectionTitlesObj);
 
   const [current, setCurrent] = React.useState(0)
 
-
   return (
     <section className={burgerIngredientStyles.container}>
+
       <h1 className="text text_type_main-large mt-10 mb-5">Соберите бургер</h1>
       <div className={`${burgerIngredientStyles.tabContainer} mb-8`} >
         {sectionTitlesArr.map((category, index) => {
@@ -48,7 +47,7 @@ function BurgerIngredients({ products }) {
 
 
 BurgerIngredients.propTypes = {
-  products: PropTypes.arrayOf(ingredientPropType).isRequired
+  products: PropTypes.arrayOf(PropTypes.shape(ingredientPropType)).isRequired
 }
 
 export default BurgerIngredients

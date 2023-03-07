@@ -8,7 +8,15 @@ import burgerConstructorStyles from './burger-constructor.module.css'
 import { ingredientPropType } from '../../utils/data'
 
 
-function BurgerConstructor({ mainIngredients }) {
+function BurgerConstructor({ mainIngredients, completeOrderFunc}) {
+
+  const [totalPrice, setTotalPrice] = React.useState(0);
+
+  React.useEffect(()=>{
+
+    setTotalPrice(mainIngredients.reduce((a , b) => (a + b.price), 0))
+  })
+
   return (
     <section className={`${burgerConstructorStyles.burgerConstructor} mt-25`}>
       <header className={`${burgerConstructorStyles.burgerConstructorListItem} mb-4 pr-4`} >
@@ -45,8 +53,8 @@ function BurgerConstructor({ mainIngredients }) {
         />
       </footer>
       <div className={`${burgerConstructorStyles.burgerConstructorConfirmBlock} mt-10`}>
-        <p className='text text_type_digits-medium mr-10'>610 <CurrencyIcon type="primary" /></p>
-        <Button htmlType="button" type="primary" size="medium">Оформить заказ</Button>
+        <p className='text text_type_digits-medium mr-10'>{totalPrice} <CurrencyIcon type="primary" /></p>
+        <Button htmlType="button" type="primary" size="medium" onClick={completeOrderFunc}>Оформить заказ</Button>
       </div>
 
     </section>
@@ -55,7 +63,8 @@ function BurgerConstructor({ mainIngredients }) {
 }
 
 BurgerConstructor.propTypes = {
-  mainIngredients: PropTypes.arrayOf(ingredientPropType).isRequired,
+  mainIngredients: PropTypes.arrayOf(PropTypes.shape(ingredientPropType)).isRequired,
+  completeOrderFunc: PropTypes.func
 }
 
 export default BurgerConstructor

@@ -3,8 +3,10 @@ import React from 'react';
 import AppHeader from '../app-header/app-header';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
+import OrderDelails from '../order-details/order-details';
+import withModal from '../hocs/withModal';
 
-import { ingredients } from '../../utils/data';
+import { orderData, serverUrl } from '../../utils/data';
 
 import appStyles from './app.module.css';
 
@@ -16,6 +18,28 @@ function App(): JSX.Element {
     ingredients: []
   })
 
+  const [modalOpened, setModalOpened] = React.useState(false);
+
+  const openModal = () => {
+    setModalOpened(true);
+  }
+
+  const closeModalByClick = (event) => {
+    event.currentTarget === event.target && setModalOpened(false);
+  }
+
+  const closeModalByXbtn = (event) => {
+    event.stopPropagation();
+    setModalOpened(false);
+  }
+
+  const closeModalByEsc = (event) => {
+    event.key === 'Escape' && setModalOpened(false);
+  }
+
+  const WithModalOrderDetails = withModal(OrderDelails);
+
+
   React.useEffect(() => {
     const getIngredients = async (url) => {
       try {
@@ -23,30 +47,19 @@ function App(): JSX.Element {
         const res = await fetch(url);
         const data = await res.json();
         setState({ ...state, isLoading: false, ingredients: data.data});
-        console.log(data);
-        console.log(state);
       } catch (err) {
         setState({ ...state, isLoading: false, hasError: true })
       }
     }
 
-    // React.useEffect(() => {
-    //   const getIngredients = async(url) => {
-    //     setState({...state, isLoading: true});
-    //     fetch(url)
-    //     .then(res => res.json())
-    //     .then(data => setState({...state,isLoading: false, ingredients: data.data}))
-    //     .catch(err => setState({...state, isLoading: false, hasError: true}))
-    //   }
-
-    getIngredients('https://norma.nomoreparties.space/api/ingredients');
+    getIngredients(serverUrl);
 
   },[])
-  // console.log(state);
 
 
   return (
-    <div className={appStyles.page}>
+    <div className={appStyles.page} onKeyDown={closeModalByEsc}>
+      {modalOpened && <WithModalOrderDetails closeByClickFunc={closeModalByClick} closeByEsc={closeModalByEsc} closeByX={closeModalByXbtn} {...orderData}/>}
       <AppHeader />
 
       <main className={appStyles.main}>
@@ -56,7 +69,7 @@ function App(): JSX.Element {
         {!state.isLoading && !state.hasError && state.ingredients.length &&
           <>
             <BurgerIngredients products={state.ingredients} />
-            <BurgerConstructor mainIngredients={state.ingredients} />
+            <BurgerConstructor mainIngredients={state.ingredients} completeOrderFunc={openModal}/>
           </>
 
         }
