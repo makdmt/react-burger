@@ -6,7 +6,8 @@ import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import OrderDelails from '../order-details/order-details';
 import withModal from '../hocs/withModal';
 
-import { orderData, serverUrl } from '../../utils/data';
+import { getIngredients } from '../../utils/burger-api'
+import { orderData } from '../../utils/data';
 
 import appStyles from './app.module.css';
 
@@ -41,18 +42,18 @@ function App(): JSX.Element {
 
 
   React.useEffect(() => {
-    const getIngredients = async (url) => {
+    const loadIngredients = async () => {
       try {
         setState({ ...state, isLoading: true });
-        const res = await fetch(url);
-        const data = await res.json();
+        const data = await getIngredients()
         setState({ ...state, isLoading: false, ingredients: data.data});
       } catch (err) {
-        setState({ ...state, isLoading: false, hasError: true })
+        setState({ ...state, isLoading: false, hasError: true });
+        console.error(err);
       }
     }
 
-    getIngredients(serverUrl);
+    loadIngredients();
 
   },[])
 

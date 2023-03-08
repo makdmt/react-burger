@@ -15,7 +15,7 @@ function BurgerConstructor({ mainIngredients, completeOrderFunc}) {
   React.useEffect(()=>{
 
     setTotalPrice(mainIngredients.reduce((a , b) => (a + b.price), 0))
-  })
+  },[mainIngredients])
 
   return (
     <section className={`${burgerConstructorStyles.burgerConstructor} mt-25`}>

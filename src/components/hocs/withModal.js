@@ -33,16 +33,19 @@ const withModal = WrappedComponent => {
 
     render() {
       return ReactDOM.createPortal(
-      // return (
+        // return (
         (
-        <ModalOverlay closeFunction={this.props.closeByClickFunc}>
-          <div className={modalStyles.popupContainer} >
-            <button className={`${modalStyles.closeBtn}`} onClick={this.props.closeByX}><CloseIcon type="primary" /></button>
-            <WrappedComponent {...this.props} />
+          <div className={modalStyles.modalScreen}>
+            <ModalOverlay closeFunction={this.props.closeByClickFunc} />
+            <div className={modalStyles.popupContainer} >
+              <button className={`${modalStyles.closeBtn}`} onClick={this.props.closeByX}><CloseIcon type="primary" /></button>
+              <WrappedComponent {...this.props} />
+            </div>
           </div>
-        </ModalOverlay>
-      )
-      , rootHtml);
+
+
+        )
+        , rootHtml);
     }
   }
 }

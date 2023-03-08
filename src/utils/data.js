@@ -37,7 +37,6 @@ import PropTypes from 'prop-types';
 //   return elementsArrangedByCategories;
 // }
 
-const serverUrl = 'https://norma.nomoreparties.space/api/ingredients';
 
 const ingredientPropType = {
   name: PropTypes.string.isRequired,
@@ -65,4 +64,4 @@ const orderData = {
   orderStatusOk: true,
 }
 
-export { serverUrl, orderData, ingredientPropType, orderDataPropType };
+export { orderData, ingredientPropType, orderDataPropType };
