@@ -1,0 +1,13 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.statusSpot {
+  width: 107px;
+  height: 102px;
+  border-radius: 50%;
+  background-image: url(/src/images/order-details-status-spot.svg);
+
+}
