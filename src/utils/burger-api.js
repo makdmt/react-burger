@@ -10,4 +10,18 @@ async function getIngredients() {
     .then(res => checkResponse(res))
 }
 
-export { getIngredients }
+async function postOrder(ingredientsId) {
+  return fetch(`${apiUrl}/orders`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      ingredients: ingredientsId
+    }),
+  })
+    .then(res => checkResponse(res))
+}
+
+
+export { getIngredients, postOrder }

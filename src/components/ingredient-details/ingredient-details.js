@@ -16,7 +16,7 @@ function IngredientDetails ({name, image_large, _id, proteins, fat, carbohydrate
     <h3 className={`${ingredientDetailsStyles.ingredientName} text text_type_main-medium mt-4 mb-8`}>{name}</h3>
 
     <ul className={`${ingredientDetailsStyles.nutrients}`}>
-       <li className="text text_type_main-default text_color_inactive">{`Калории,\u00A0ккал`} <span className="text_type_digits-default">{calories}</span></li>
+       <li className="text text_type_main-default text_color_inactive">{`Калории,\u00A0ккал`} <br/><span className="text_type_digits-default">{calories}</span></li>
        <li className="text text_type_main-default text_color_inactive">{`Белки,\u00A0г`} <span className="text_type_digits-default">{proteins}</span></li>
        <li className="text text_type_main-default text_color_inactive">{`Жиры,\u00A0г`} <span className="text_type_digits-default">{fat}</span></li>
        <li className="text text_type_main-default text_color_inactive">{`Улеводы,\u00A0г`} <span className="text_type_digits-default">{carbohydrates}</span></li>

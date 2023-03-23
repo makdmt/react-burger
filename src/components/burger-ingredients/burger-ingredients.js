@@ -3,13 +3,17 @@ import PropTypes from 'prop-types';
 
 import IngredientCard from '../ingredient-card/ingredient-card';
 
+import { AllIngredientsContext } from '../../services/userContext';
+
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import burgerIngredientStyles from './burger-ingredients.module.css'
 
 import { ingredientPropType } from '../../utils/data';
 
-function BurgerIngredients({ products }) {
+function BurgerIngredients() {
+
+  const products = React.useContext(AllIngredientsContext);
 
   const sectionTitlesObj = {
     bun: 'Булки',
@@ -46,8 +50,8 @@ function BurgerIngredients({ products }) {
 }
 
 
-BurgerIngredients.propTypes = {
-  products: PropTypes.arrayOf(PropTypes.shape(ingredientPropType)).isRequired
-}
+// BurgerIngredients.propTypes = {
+//   products: PropTypes.arrayOf(PropTypes.shape(ingredientPropType)).isRequired
+// }
 
 export default BurgerIngredients

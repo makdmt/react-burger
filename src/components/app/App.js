@@ -6,8 +6,10 @@ import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import OrderDelails from '../order-details/order-details';
 import withModal from '../hocs/withModal';
 
-import { getIngredients } from '../../utils/burger-api'
-import { orderData } from '../../utils/data';
+import { AllIngredientsContext } from '../../services/userContext';
+
+import { getIngredients, postOrder } from '../../utils/burger-api'
+// import { orderData } from '../../utils/data';
 
 import appStyles from './app.module.css';
 
@@ -19,10 +21,19 @@ function App(): JSX.Element {
     ingredients: []
   })
 
+  const [orderData, setOrderData] =  React.useState({});
+
   const [modalOpened, setModalOpened] = React.useState(false);
 
-  const openModal = () => {
-    setModalOpened(true);
+  const openModal = (ingredientsId) => {
+    postOrder(ingredientsId)
+    .then(data => setOrderData(data))
+    .catch(err => {
+      console.log(err);
+      setOrderData({order:{number: '0000'}, success: false})
+    })
+    .finally(() => setModalOpened(true));
+
   }
 
   const closeModalByClick = (event) => {
@@ -64,16 +75,18 @@ function App(): JSX.Element {
       <AppHeader />
 
       <main className={appStyles.main}>
+        <AllIngredientsContext.Provider value={state.ingredients}>
         {state.isLoading && 'Загрузка...'}
         {state.hasError && 'Произошла ошибка, попробуйте перезагрузить страницу'}
 
         {!state.isLoading && !state.hasError && state.ingredients.length &&
           <>
-            <BurgerIngredients products={state.ingredients} />
-            <BurgerConstructor mainIngredients={state.ingredients} completeOrderFunc={openModal}/>
+            <BurgerIngredients />
+            <BurgerConstructor completeOrderFunc={openModal}/>
           </>
 
         }
+        </AllIngredientsContext.Provider>
       </main>
 
     </div>

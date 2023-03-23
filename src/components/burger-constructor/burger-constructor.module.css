@@ -42,3 +42,8 @@
 display: flex;
 align-items: center;
 }
+
+.burgerConstructorConfirmBlock svg {
+  width: 33px;
+  height: 33px;
+  }

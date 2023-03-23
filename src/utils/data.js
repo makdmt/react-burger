@@ -54,14 +54,14 @@ const ingredientPropType = {
   isLocked: PropTypes.bool,
 };
 
-const orderDataPropType = PropTypes.shape({
-  orderId: PropTypes.string.isRequired,
-  orderStatusOk: PropTypes.bool
-});
+// const orderDataPropType = PropTypes.shape({
+//   orderId: PropTypes.string.isRequired,
+//   orderStatusOk: PropTypes.bool
+// });
 
-const orderData = {
-  orderId: '034536',
-  orderStatusOk: true,
-}
+// const orderData = {
+//   orderId: '034536',
+//   orderStatusOk: true,
+// }
 
-export { orderData, ingredientPropType, orderDataPropType };
+export { ingredientPropType };

@@ -15,6 +15,7 @@
 }
 .ingredientsSectionsConatiner::-webkit-scrollbar-track {
   background-color: #2f2f37;
+  margin-bottom: 50px;
 }
 
 .ingredientsSectionsConatiner::-webkit-scrollbar-thumb {
