@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 import AppHeader from '../app-header/app-header';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
@@ -9,7 +10,6 @@ import withModal from '../hocs/withModal';
 import { AllIngredientsContext } from '../../services/userContext';
 
 import { getIngredients, postOrder } from '../../utils/burger-api'
-// import { orderData } from '../../utils/data';
 
 import appStyles from './app.module.css';
 
@@ -49,24 +49,13 @@ function App(): JSX.Element {
     event.key === 'Escape' && setModalOpened(false);
   }
 
+  const scrollHandler = (e) => {
+    // console.log(e.target);
+    console.log('скролл');
+  }
+
+
   const WithModalOrderDetails = withModal(OrderDelails);
-
-
-  React.useEffect(() => {
-    const loadIngredients = async () => {
-      try {
-        setState({ ...state, isLoading: true });
-        const data = await getIngredients()
-        setState({ ...state, isLoading: false, ingredients: data.data});
-      } catch (err) {
-        setState({ ...state, isLoading: false, hasError: true });
-        console.error(err);
-      }
-    }
-
-    loadIngredients();
-
-  },[])
 
 
   return (
@@ -79,10 +68,10 @@ function App(): JSX.Element {
         {state.isLoading && 'Загрузка...'}
         {state.hasError && 'Произошла ошибка, попробуйте перезагрузить страницу'}
 
-        {!state.isLoading && !state.hasError && state.ingredients.length &&
+        {!state.isLoading && !state.hasError &&
           <>
-            <BurgerIngredients />
-            <BurgerConstructor completeOrderFunc={openModal}/>
+            <BurgerIngredients onScroll={scrollHandler}/>
+            {/* <BurgerConstructor completeOrderFunc={openModal}/> */}
           </>
 
         }
