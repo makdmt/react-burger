@@ -34,47 +34,26 @@ function BurgerIngredients() {
 
     const innerSections = Array.from(e.target.children);
 
-    const distancesFromVisibleTop = innerSections.map((section) => {
+    const visiblePartsOfInnerSections = innerSections.map((section) => {
       let innerSectionTopCoordinate = section.getBoundingClientRect().y;
       let innerSectionHeight = section.getBoundingClientRect().height;
 
-      const distance = {
-        distance: 0,
-        isVisible: false
+      if ((innerSectionTopCoordinate - visibleBlockTopCoordinate) <= 0) {
+        return (innerSectionTopCoordinate + innerSectionHeight - visibleBlockTopCoordinate);
+      } else {
+        return (visibleBlockTopCoordinate + visibleBlockHeight - innerSectionTopCoordinate);
       }
-
-      distance.distance = Math.abs(innerSectionTopCoordinate - visibleBlockTopCoordinate);
-
-      if ((innerSectionTopCoordinate - visibleBlockTopCoordinate) < 0 && (innerSectionHeight - distance.distance) > (visibleBlockHeight / 4)) {
-        distance.isVisible = true;
-      }
-
-      if ((innerSectionTopCoordinate - visibleBlockTopCoordinate) > 0 && (innerSectionTopCoordinate - visibleBlockTopCoordinate) < (visibleBlockHeight * 3 / 4)) {
-        distance.isVisible = true;
-      }
-
-      return distance;
     });
 
-    let sectionIndexWithMinDistanceFromVisibleTop = distancesFromVisibleTop.findIndex(elm => {
-      return elm === distancesFromVisibleTop.reduce((prev, cur) => cur.distance < prev.distance ? cur : prev, { distance: Infinity })
-    });
+    let maxVisiblePart = Math.max(...visiblePartsOfInnerSections);
+    let sectionIndexWithMaxVisiblePart = visiblePartsOfInnerSections.findIndex(elm => elm === maxVisiblePart);
 
-    let newActiveTabIndex = 0;
+    sectionIndexWithMaxVisiblePart != currentTab && setCurrentTab(sectionIndexWithMaxVisiblePart);
 
-    if (distancesFromVisibleTop[sectionIndexWithMinDistanceFromVisibleTop].isVisible) {
-      newActiveTabIndex = sectionIndexWithMinDistanceFromVisibleTop;
-    } else {
-      newActiveTabIndex = sectionIndexWithMinDistanceFromVisibleTop - 1 >= 0 ? sectionIndexWithMinDistanceFromVisibleTop - 1 : 0;
-    }
+    (e.target.scrollTop === 0) && setCurrentTab(0);
+    (e.target.scrollHeight - e.target.scrollTop - e.target.clientHeight) < 10 && setCurrentTab(sectionTitlesArr.length - 1);
 
-    newActiveTabIndex != currentTab && setCurrentTab(newActiveTabIndex);
-
-    // let minDistanceFromVisibleTop = Math.min(...distancesFromVisibleTop);
-    // let sectionWithMinDistanceFromVisibleTop = distancesFromVisibleTop.findIndex(elm => elm === minDistanceFromVisibleTop);
   }
-
-
 
   return (
     <section className={burgerIngredientStyles.container}>
@@ -88,7 +67,7 @@ function BurgerIngredients() {
         })}
       </div>
       <div className={burgerIngredientStyles.ingredientsSectionsConatiner} onScroll={scrollHandler}>
-        {sectionTitlesArr.map((category, index) => {
+        {sectionTitlesArr.reverse().map((category, index) => {
           return (
             <section className={burgerIngredientStyles.categorySection} key={index}>
               <h2 className={`${burgerIngredientStyles.categoryHeading} text text_type_main-medium mt-2 mb-6`}>{category[1]}</h2>
