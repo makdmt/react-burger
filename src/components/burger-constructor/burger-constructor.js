@@ -1,110 +1,98 @@
 import React from 'react'
-import PropTypes from 'prop-types';
 
-import { ConstructorElement, DragIcon, Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import { useSelector, useDispatch } from 'react-redux';
+import { completeOrder, addIngredientToConstructor, RESET_BURGER } from '../../services/actions/burgerConstructor';
 
-import { AllIngredientsContext } from '../../services/userContext';
+import { useDrop } from 'react-dnd/dist/hooks';
+
+import { ConstructorElement, Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import BurgerConstructorElement from '../burger-constructor-element/burger-constructor-element'
+
 import burgerConstructorStyles from './burger-constructor.module.css'
 
-import { ingredientPropType } from '../../utils/data'
 
-const burgerInitialState = {
-  burgerIngredients: []
-};
+function BurgerConstructor() {
 
-function burgerReducer(state, action) {
-  switch (action.type) {
-    case 'set bun':
-     let currentIngredients = state.burgerIngredients.filter(ingredient => ingredient.type != 'bun');
-     currentIngredients.push(action.payload);
-    return {burgerIngredients: currentIngredients};
-    case 'set main':
-      state.burgerIngredients.push(action.payload);
-      return {burgerIngredients: state.burgerIngredients};
-    case 'reset':
-      return burgerInitialState;
-    default:
-      throw new Error(`Wrong type of action: ${action.type}`);
-}
-}
+  const { items: allIngredients } = useSelector(store => store.burgerConstructor);
+  const currentBurgerIngredients = useSelector(store => store.burgerConstructor.currentBurgerItems);
 
+  const dispatch = useDispatch();
 
-function BurgerConstructor({ completeOrderFunc}) {
+  const [{ backgroundColor }, dropTarget] = useDrop({
+    accept: "ingredient",
+    drop({ ingredientId }) {
+      dispatch(addIngredientToConstructor(ingredientId, allIngredients));
+    },
+    collect: monitor => ({
+      backgroundColor: monitor.isOver() ? "#1C1C21" : "unset",
+    })
+  });
 
-  const allIngredients = React.useContext(AllIngredientsContext);
-  const [burgerState, burgerDispatcher] = React.useReducer(burgerReducer, burgerInitialState, undefined);
-  let [bunIngredient] = burgerState.burgerIngredients.filter(ingredient => ingredient.type === 'bun');
+  React.useEffect(() => {
+
+    if (allIngredients.length !== 0) {
+      dispatch({type: RESET_BURGER})
+      const initialBurgerIngredients = [];
+      while (!initialBurgerIngredients.some(elm => (elm.type === 'bun'))  || initialBurgerIngredients.length < 5) {
+        let ingredientIndex = Math.floor(Math.random() * (allIngredients.length));
+        if (initialBurgerIngredients.indexOf(allIngredients[ingredientIndex]) === -1) initialBurgerIngredients.push(allIngredients[ingredientIndex]);
+      }
+      initialBurgerIngredients.forEach(elm => {
+        dispatch(addIngredientToConstructor(elm._id, allIngredients))})
+    }
+  }, [dispatch, allIngredients])
+
+  let [currentBunIngredient] = currentBurgerIngredients.filter(ingredient => ingredient.ingredientDetails.type === 'bun');
 
   const [totalPrice, setTotalPrice] = React.useState(0);
 
   React.useEffect(() => {
-     burgerDispatcher({ type: 'set bun', payload: allIngredients.filter(ingredient => ingredient.type == 'bun')[Math.floor(Math.random()*2)] });
-     for (let i = 1; i <= 3; i++) {
-      let ingredientIndex = Math.floor(Math.random()*(allIngredients.length -2));
-       burgerDispatcher({ type: 'set main', payload: allIngredients.filter(ingredient => ingredient.type != 'bun')[ingredientIndex]});
-     }
 
-  }, [])
+    setTotalPrice(currentBurgerIngredients.reduce((a, b) => {
+      return (b.ingredientDetails.type === 'bun' ? 2 * b.ingredientDetails.price + a : b.ingredientDetails.price + a)
+    }, 0))
+  }, [currentBurgerIngredients]);
 
-  React.useEffect(()=>{
 
-    setTotalPrice(burgerState.burgerIngredients.reduce((a , b) => {
-      return (b.type === 'bun' ? 2*b.price + a : b.price + a)}, 0))
-  },[burgerState.burgerIngredients])
-
-  const completeOrder = () => {
-    let burgerIngredientsId = burgerState.burgerIngredients.map(ingredient => ingredient._id);
-    completeOrderFunc(burgerIngredientsId);
+  const completeOrderBtnHandler = () => {
+    let burgerIngredientsId = currentBurgerIngredients.map(ingredient => ingredient.ingredientDetails._id);
+    dispatch(completeOrder(burgerIngredientsId));
   }
 
   return (
-    <section className={`${burgerConstructorStyles.burgerConstructor} mt-25`}>
+    <section className={`${burgerConstructorStyles.burgerConstructor} mt-25`} style={{backgroundColor}}>
       <header className={`${burgerConstructorStyles.burgerConstructorListItem} mb-4 pr-4`} >
-        {!!bunIngredient && <ConstructorElement
+        {!!currentBunIngredient && <ConstructorElement
           type='top'
           isLocked={true}
-          text={bunIngredient.name + ' (верх)'}
-          price={bunIngredient.price}
-          thumbnail={bunIngredient.image}
+          text={currentBunIngredient.ingredientDetails.name + ' (верх)'}
+          price={currentBunIngredient.ingredientDetails.price}
+          thumbnail={currentBunIngredient.ingredientDetails.image}
         />}
       </header>
-      <ul style={{height: `${4*96}px`}} className={`${burgerConstructorStyles.burgerConstructorList}`} >
-        {burgerState.burgerIngredients.filter(ingredient => ingredient.type !='bun').map((ingredient, index) => (
-          <li className={`${burgerConstructorStyles.burgerConstructorListItem} pr-2 mb-4`} key={index}>
-            <DragIcon type="primary" />
-            <ConstructorElement
-              type={ingredient.type}
-              isLocked={ingredient.isLocked}
-              text={ingredient.name}
-              price={ingredient.price}
-              thumbnail={ingredient.image}
-            />
-          </li>
+      <ul style={{ height: `${4 * 96}px`}} className={`${burgerConstructorStyles.burgerConstructorList}`} ref={dropTarget}>
+        {currentBurgerIngredients.filter(ingredient => ingredient.ingredientDetails.type != 'bun').map((ingredient) => (
+          <BurgerConstructorElement key={ingredient.uuid} ingredientUuid={ingredient.uuid} ingredient={ingredient.ingredientDetails} />
         ))}
       </ul>
 
       <footer className={`${burgerConstructorStyles.burgerConstructorListItem} pr-4`} >
-      {!!bunIngredient && <ConstructorElement
+        {!!currentBunIngredient && <ConstructorElement
           type='bottom'
           isLocked={true}
-          text={bunIngredient.name + ' (низ)'}
-          price={bunIngredient.price}
-          thumbnail={bunIngredient.image}
+          text={currentBunIngredient.ingredientDetails.name + ' (низ)'}
+          price={currentBunIngredient.ingredientDetails.price}
+          thumbnail={currentBunIngredient.ingredientDetails.image}
         />}
       </footer>
       <div className={`${burgerConstructorStyles.burgerConstructorConfirmBlock} mt-10`}>
         <p className='text text_type_digits-medium mr-10'>{totalPrice} <CurrencyIcon type="primary" /></p>
-        <Button htmlType="button" type="primary" size="medium" onClick={completeOrder}>Оформить заказ</Button>
+        <Button htmlType="button" type="primary" size="medium" onClick={completeOrderBtnHandler}>Оформить заказ</Button>
       </div>
 
     </section>
 
   );
-}
-
-BurgerConstructor.propTypes = {
- // burgerIngredients: PropTypes.arrayOf(PropTypes.shape(ingredientPropType)).isRequired,
-  completeOrderFunc: PropTypes.func
 }
 
 export default BurgerConstructor

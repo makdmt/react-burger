@@ -3,10 +3,12 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  border-radius: 40px;
 
 }
 
 .burgerConstructorList {
+  width: 100%;
   list-style-type: none;
   margin: 0;
   padding: 0;

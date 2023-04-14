@@ -1,0 +1,7 @@
+
+.burgerConstructorListItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: opacity .12s ;
+}

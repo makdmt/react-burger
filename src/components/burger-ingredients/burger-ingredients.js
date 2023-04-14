@@ -11,12 +11,6 @@ import burgerIngredientStyles from './burger-ingredients.module.css'
 
 function BurgerIngredients() {
 
-  const dispatch = useDispatch();
-
-  React.useEffect(() => {
-    dispatch(getItems())
-  }, [dispatch])
-
   const products = useSelector(store => store.burgerConstructor.items);
 
   const sectionTitlesObj = {
@@ -75,7 +69,6 @@ function BurgerIngredients() {
   }
 
 
-
   return (
     <section className={burgerIngredientStyles.container}>
 
@@ -92,13 +85,12 @@ function BurgerIngredients() {
           return (
             <section className={burgerIngredientStyles.categorySection} key={index}>
               <h2 className={`${burgerIngredientStyles.categoryHeading} text text_type_main-medium mt-2 mb-6`}>{category[1]}</h2>
-              <IngredientCard oneCategoryIngredients={products.filter((product) => { return product.type == category[0] })} />
+              { products.filter((product) => { return product.type == category[0] }).map((product, index) => (<IngredientCard key={index} {...product} />)) }
             </section>)
         })}
       </div>
     </section>
   )
 }
-
 
 export default BurgerIngredients
