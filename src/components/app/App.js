@@ -1,4 +1,9 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { getItems, DELETE_ORDER_DETAILS_FROM_MODAL } from '../../services/actions/burgerConstructor';
+
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import AppHeader from '../app-header/app-header';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
@@ -6,76 +11,55 @@ import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import OrderDelails from '../order-details/order-details';
 import withModal from '../hocs/withModal';
 
-import { getIngredients } from '../../utils/burger-api'
-import { orderData } from '../../utils/data';
-
 import appStyles from './app.module.css';
 
 function App(): JSX.Element {
 
-  const [state, setState] = React.useState({
-    isLoading: false,
-    hasError: false,
-    ingredients: []
-  })
+  const dispatch = useDispatch();
 
-  const [modalOpened, setModalOpened] = React.useState(false);
+  React.useEffect(() => {
+    dispatch(getItems())
+  }, [dispatch])
 
-  const openModal = () => {
-    setModalOpened(true);
-  }
+  const { itemsRequest: isLoading, itemsFailed: hasError } = useSelector(store => ({
+    itemsRequest: store.burgerConstructor.itemsRequest,
+    itemsFailed: store.burgerConstructor.itemsFailed
+  }));
+
+  const orderDetails = useSelector(store => store.burgerConstructor.orderDetails);
 
   const closeModalByClick = (event) => {
-    event.currentTarget === event.target && setModalOpened(false);
+    event.currentTarget === event.target && dispatch({ type: DELETE_ORDER_DETAILS_FROM_MODAL });
   }
 
   const closeModalByXbtn = (event) => {
     event.stopPropagation();
-    setModalOpened(false);
+    dispatch({ type: DELETE_ORDER_DETAILS_FROM_MODAL });
   }
 
   const closeModalByEsc = (event) => {
-    event.key === 'Escape' && setModalOpened(false);
+    event.key === 'Escape' && dispatch({ type: DELETE_ORDER_DETAILS_FROM_MODAL });
   }
 
   const WithModalOrderDetails = withModal(OrderDelails);
 
-
-  React.useEffect(() => {
-    const loadIngredients = async () => {
-      try {
-        setState({ ...state, isLoading: true });
-        const data = await getIngredients()
-        setState({ ...state, isLoading: false, ingredients: data.data});
-      } catch (err) {
-        setState({ ...state, isLoading: false, hasError: true });
-        console.error(err);
-      }
-    }
-
-    loadIngredients();
-
-  },[])
-
-
   return (
-    <div className={appStyles.page} onKeyDown={closeModalByEsc}>
-      {modalOpened && <WithModalOrderDetails closeByClickFunc={closeModalByClick} closeByEsc={closeModalByEsc} closeByX={closeModalByXbtn} {...orderData}/>}
+    <div className={appStyles.page} >
+      {!(orderDetails === null) && <WithModalOrderDetails closeByClickFunc={closeModalByClick} closeByEsc={closeModalByEsc} closeByX={closeModalByXbtn} />}
       <AppHeader />
 
       <main className={appStyles.main}>
-        {state.isLoading && 'Загрузка...'}
-        {state.hasError && 'Произошла ошибка, попробуйте перезагрузить страницу'}
-
-        {!state.isLoading && !state.hasError && state.ingredients.length &&
+        {isLoading && 'Загрузка...'}
+        {hasError && 'Произошла ошибка, попробуйте перезагрузить страницу'}
+        {!isLoading && !hasError &&
           <>
-            <BurgerIngredients products={state.ingredients} />
-            <BurgerConstructor mainIngredients={state.ingredients} completeOrderFunc={openModal}/>
+            <DndProvider backend={HTML5Backend}>
+              <BurgerIngredients />
+              <BurgerConstructor />
+            </DndProvider>
           </>
-
         }
       </main>
-
     </div>
   );
 }

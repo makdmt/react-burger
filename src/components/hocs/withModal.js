@@ -16,10 +16,6 @@ const withModal = WrappedComponent => {
       super(props);
 
       this.closeByEsc = this.props.closeByEsc.bind(this);
-
-      // this.state = {
-
-      // }
     }
 
     componentDidMount() {
@@ -33,7 +29,6 @@ const withModal = WrappedComponent => {
 
     render() {
       return ReactDOM.createPortal(
-        // return (
         (
           <div className={modalStyles.modalScreen}>
             <ModalOverlay closeFunction={this.props.closeByClickFunc} />
