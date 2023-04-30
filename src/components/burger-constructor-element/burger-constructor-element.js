@@ -24,7 +24,7 @@ function BurgerConstructorElement({ ingredientUuid, ingredient }) {
 
 
   const [{ dragOpacity }, dragRef] = useDrag(() => ({
-    type: "ingredientInConstructer",
+    type: "ingredientInConstructor",
     item: {ingredientId, ingredientUuid, ingredientIndexInArray},
     collect: monitor => ({
       dragOpacity: monitor.isDragging() ? 0 : 1
@@ -32,7 +32,7 @@ function BurgerConstructorElement({ ingredientUuid, ingredient }) {
   }), [ingredientIndexInArray, currentBurgerIngredients])
 
   const [{ dropOpacity }, dropTarget] = useDrop(() => ({
-    accept: "ingredientInConstructer",
+    accept: "ingredientInConstructor",
     drop(movingIngredient) {
       dispatch(removeIngredientFromConstructor(movingIngredient.ingredientUuid));
       dispatch(addIngredientToConstructor(movingIngredient.ingredientId, allIngredients, ingredientIndexInArray));
