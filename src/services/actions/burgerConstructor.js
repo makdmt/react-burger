@@ -62,9 +62,9 @@ function completeOrder(ingredientsId) {
 
 const addIngredientToConstructor = (ingredientId, allIngredients, arrayIndex = 1) => (dispatch) => {
   const uuid = uuidv4();
-  const [findedIngredient] = allIngredients.filter(ingredient => ingredient._id === ingredientId);
-  const addingIngredient = {ingredientDetails: findedIngredient, uuid};
-  findedIngredient.type === 'bun' ? dispatch({ type: ADD_BUN_INGREDIENT_TO_BURGER, payload: addingIngredient, arrayIndex: arrayIndex}) : dispatch({ type: ADD_MAIN_INGREDIENT_TO_BURGER, payload: addingIngredient, arrayIndex: arrayIndex})
+  const [foundIngredient] = allIngredients.filter(ingredient => ingredient._id === ingredientId);
+  const addingIngredient = {ingredientDetails: foundIngredient, uuid};
+  foundIngredient.type === 'bun' ? dispatch({ type: ADD_BUN_INGREDIENT_TO_BURGER, payload: addingIngredient, arrayIndex: arrayIndex}) : dispatch({ type: ADD_MAIN_INGREDIENT_TO_BURGER, payload: addingIngredient, arrayIndex: arrayIndex})
 }
 
 const removeIngredientFromConstructor = (uuid) => (dispatch) => {
