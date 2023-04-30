@@ -28,25 +28,25 @@ function BurgerConstructor() {
     })
   });
 
-  React.useEffect(() => {
+  // React.useEffect(() => {
 
-    if (allIngredients.length !== 0) {
-      dispatch({type: RESET_BURGER})
-      const initialBurgerIngredients = [];
-      while (!initialBurgerIngredients.some(elm => (elm.type === 'bun'))  || initialBurgerIngredients.length < 5) {
-        let ingredientIndex = Math.floor(Math.random() * (allIngredients.length));
-        if (initialBurgerIngredients.indexOf(allIngredients[ingredientIndex]) === -1) initialBurgerIngredients.push(allIngredients[ingredientIndex]);
-      }
-      initialBurgerIngredients.forEach(elm => {
-        dispatch(addIngredientToConstructor(elm._id, allIngredients))})
-    }
-  }, [dispatch, allIngredients])
+  //   if (allIngredients.length !== 0) {
+  //     dispatch({type: RESET_BURGER})
+  //     const initialBurgerIngredients = [];
+  //     while (!initialBurgerIngredients.some(elm => (elm.type === 'bun'))  || initialBurgerIngredients.length < 5) {
+  //       let ingredientIndex = Math.floor(Math.random() * (allIngredients.length));
+  //       if (initialBurgerIngredients.indexOf(allIngredients[ingredientIndex]) === -1) initialBurgerIngredients.push(allIngredients[ingredientIndex]);
+  //     }
+  //     initialBurgerIngredients.forEach(elm => {
+  //       dispatch(addIngredientToConstructor(elm._id, allIngredients))})
+  //   }
+  // }, [dispatch, allIngredients])
 
   let [currentBunIngredient] = currentBurgerIngredients.filter(ingredient => ingredient.ingredientDetails.type === 'bun');
 
   const [totalPrice, setTotalPrice] = React.useState(0);
 
-  React.useEffect(() => {
+  React.useMemo(() => {
 
     setTotalPrice(currentBurgerIngredients.reduce((a, b) => {
       return (b.ingredientDetails.type === 'bun' ? 2 * b.ingredientDetails.price + a : b.ingredientDetails.price + a)
