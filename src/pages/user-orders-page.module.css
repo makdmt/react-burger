@@ -1,0 +1,13 @@
+.main {
+  margin: 0 auto;
+  margin-top: 11.1vh;
+  max-width: 1240px;
+  display: flex;
+  justify-content: flex-start;
+  gap: 60px;
+}
+
+.contentBlock {
+  margin-top: 16.7vh;
+  width: 480px;
+}

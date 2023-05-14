@@ -8,6 +8,7 @@ import {
   RESET_BURGER,
   PUT_INGREDIENT_DETAILS_TO_MODAL,
   DELETE_INGREDIENT_DETAILS_FROM_MODAL,
+  POST_ORDER_REQUEST,
   POST_ORDER_SUCCESS,
   POST_ORDER_FAILED,
   DELETE_ORDER_DETAILS_FROM_MODAL
@@ -20,6 +21,7 @@ const initialState = {
   itemsRequest: false,
   itemsFailed: false,
   currentBurgerItems: [],
+  orderPostRequest: false,
   orderDetails: null,
   selectedIngredientDetails: null,
 }
@@ -93,10 +95,16 @@ export const burgerReducer = (state = initialState, action) => {
         selectedIngredientDetails: null
       }
     }
-
+    case POST_ORDER_REQUEST: {
+      return {
+        ...state,
+        orderPostRequest: true
+      }
+    }
     case POST_ORDER_SUCCESS: {
       return {
         ...state,
+        orderPostRequest: false,
         orderDetails: {
           ...state.order,
           orderNumber: action.payload,
@@ -108,6 +116,7 @@ export const burgerReducer = (state = initialState, action) => {
       return {
         orderDetails: {
           ...state.order,
+          orderPostRequest: false,
           orderNumber: '0000',
           orderPostSuccess: false
         }

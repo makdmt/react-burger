@@ -1,33 +1,43 @@
-import React from 'react'
+import React from 'react';
+
+import { Link, NavLink, useLocation } from 'react-router-dom';
 
 import { Logo } from '@ya.praktikum/react-developer-burger-ui-components';
-import { BurgerIcon, ListIcon, ProfileIcon } from '@ya.praktikum/react-developer-burger-ui-components/dist/ui/icons';
+import { BurgerIcon, ProfileIcon } from '@ya.praktikum/react-developer-burger-ui-components/dist/ui/icons';
 
 import headerStyles from './app-header.module.css'
-class AppHeader extends React.Component {
-  render() {
-    return (
-      <header className={headerStyles.header}>
-        <nav className={`${headerStyles.menu} mt-4 mb-4`}>
-          <button style={{color: 'white'}} className={`${headerStyles.button} text text_type_main-default pl-5 pr-5 mr-2`} type='button'>
-            <BurgerIcon type={'primary'} />
-            Конструктор
-          </button>
-          <button className={`${headerStyles.button} text text_type_main-default text_color_inactive pl-5 pr-5`} type='button'>
-            <ListIcon type={'secondary'} />
-            Лента заказов
-          </button>
-        </nav>
-        <a href='#' className={`${headerStyles.logo} ` }>
-          <Logo height='40' />
-        </a>
-        <button className={`${headerStyles.button} ${headerStyles.lkButton} text text_type_main-default text_color_inactive pl-5 pr-5 mt-4 mb-4`} type='button'>
-          <ProfileIcon type={'secondary'} />
-          Личный кабинет
-        </button>
-      </header>
-    );
-  }
+
+function AppHeader() {
+
+  const location = useLocation();
+
+  return (
+    <header className={headerStyles.header}>
+      <nav className={`${headerStyles.menu} mt-4 mb-4`}>
+        <NavLink to='/' end className={({ isActive }) => isActive ?
+          `${headerStyles.button} text text_type_main-default pl-5 pr-5`
+          : `${headerStyles.button} text text_type_main-default text_color_inactive pl-5 pr-5`}>
+          <BurgerIcon type={location.pathname === '/' ? 'primary' : 'secondary'} />
+          Конструктор
+        </NavLink>
+
+        <NavLink to='/feed' end className={({ isActive }) => isActive ?
+          `${headerStyles.button} text text_type_main-default pl-5 pr-5`
+          : `${headerStyles.button} text text_type_main-default text_color_inactive pl-5 pr-5`}>
+          <BurgerIcon type={location.pathname === '/feed' ? 'primary' : 'secondary'} />
+          Лента заказов
+        </NavLink>
+
+      </nav>
+      <Link to="/" className={`${headerStyles.logo} `}>
+        <Logo height='40' />
+      </Link>
+      <NavLink to='/profile' state={{ navigateAfter: '/profile' }} className={({ isActive }) => isActive ? `${headerStyles.button} ${headerStyles.lkButton} text text_type_main-default pl-5 pr-5 mt-4 mb-4` : `${headerStyles.button} ${headerStyles.lkButton} text text_type_main-default text_color_inactive pl-5 pr-5 mt-4 mb-4`}>
+        <ProfileIcon type={location.pathname === '/profile' ? 'primary' : 'secondary'} />
+        Личный кабинет
+      </NavLink>
+    </header>
+  );
 }
 
 export default AppHeader

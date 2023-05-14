@@ -1,66 +1,87 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getItems, DELETE_ORDER_DETAILS_FROM_MODAL } from '../../services/actions/burgerConstructor';
+import { getItems } from '../../services/actions/burgerConstructor';
 
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import { BrowserRouter, Routes, Route, useLocation, useSearchParams } from 'react-router-dom';
 
-import AppHeader from '../app-header/app-header';
-import BurgerConstructor from '../burger-constructor/burger-constructor';
-import BurgerIngredients from '../burger-ingredients/burger-ingredients';
-import OrderDelails from '../order-details/order-details';
-import withModal from '../hocs/withModal';
+import { searchParamsToObject } from '../../utils/url-decoding';
+import { addIngredientToConstructor, RESET_BURGER } from '../../services/actions/burgerConstructor';
 
-import appStyles from './app.module.css';
+import { ProtectedRouteElement } from '../protected-route-element/protected-route-element';
+
+import { MainPage } from '../../pages/main-page';
+import { ProfilePage } from '../../pages/profile-page';
+import { UserOrders } from '../../pages/user-orders-page';
+import { IngredientPage } from '../../pages/ingredient-page';
+
+
+import { AuthPage } from '../../pages/auth-page';
+import { RegisterForm } from '../register-form/register-form';
+import { LoginForm } from '../login-form/login-form';
+import { ForgotPasswordForm } from '../forgot-password-form/forgot-password-form';
+import { ResetPasswordForm } from '../reset-password-form/reset-password-form';
+
+import { NotFound404Page } from '../../pages/not-found404-page';
+
+
+import { ModalIngredientDetails } from '../modal-ingredient-details/modal-ingredient-details';
+
 
 function App(): JSX.Element {
 
+  const location = useLocation();
+  const background = location.state?.background || null;
+
+  const { items: allIngredients, currentBurgerItems } = useSelector(store => store.burgerConstructor);
   const dispatch = useDispatch();
 
   React.useEffect(() => {
     dispatch(getItems())
   }, [dispatch])
 
-  const { itemsRequest: isLoading, itemsFailed: hasError } = useSelector(store => ({
-    itemsRequest: store.burgerConstructor.itemsRequest,
-    itemsFailed: store.burgerConstructor.itemsFailed
-  }));
 
-  const orderDetails = useSelector(store => store.burgerConstructor.orderDetails);
+  const initialUrlParams = React.useRef(location.search);
 
-  const closeModalByClick = (event) => {
-    event.currentTarget === event.target && dispatch({ type: DELETE_ORDER_DETAILS_FROM_MODAL });
-  }
+  // React.useEffect(() => {
+  //   console.log('app смонтировался')
+  // }, [])
 
-  const closeModalByXbtn = (event) => {
-    event.stopPropagation();
-    dispatch({ type: DELETE_ORDER_DETAILS_FROM_MODAL });
-  }
+  React.useEffect(() => {
+    if (currentBurgerItems.length === 0) {
+      dispatch({type: RESET_BURGER})
+      if (!!allIngredients.length && initialUrlParams.current.length > 0 && initialUrlParams.current.length < 400) {
+        const burgerConfigFromUrl = searchParamsToObject(initialUrlParams.current);
+        // console.log(burgerConfigFromUrl);
+        for (let key in burgerConfigFromUrl) {
+          // console.log(`${key} значение ${burgerConfigFromUrl[key]}`)
+          for (let i = 0; i < Math.min(3, burgerConfigFromUrl[key]); i++) {
+            // console.log(`${key} значение ${burgerConfigFromUrl[key]}`)
+            allIngredients.some(ingredient => ingredient._id === key) && dispatch(addIngredientToConstructor(key, allIngredients));
+          }
+        }
+      }
+    }
+  }, [allIngredients])
 
-  const closeModalByEsc = (event) => {
-    event.key === 'Escape' && dispatch({ type: DELETE_ORDER_DETAILS_FROM_MODAL });
-  }
-
-  const WithModalOrderDetails = withModal(OrderDelails);
 
   return (
-    <div className={appStyles.page} >
-      {!(orderDetails === null) && <WithModalOrderDetails closeByClickFunc={closeModalByClick} closeByEsc={closeModalByEsc} closeByX={closeModalByXbtn} />}
-      <AppHeader />
-
-      <main className={appStyles.main}>
-        {isLoading && 'Загрузка...'}
-        {hasError && 'Произошла ошибка, попробуйте перезагрузить страницу'}
-        {!isLoading && !hasError &&
-          <>
-            <DndProvider backend={HTML5Backend}>
-              <BurgerIngredients />
-              <BurgerConstructor />
-            </DndProvider>
-          </>
-        }
-      </main>
-    </div>
+    //  <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<MainPage />} />
+      {background && <Route path="/" element={<MainPage />}>
+        <Route path="/ingredients/:id" element={<ModalIngredientDetails />} />
+      </Route>}
+      {!background && <Route path="/ingredients/:id" element={<IngredientPage />} />}
+      <Route path="/profile" element={<ProtectedRouteElement element={<ProfilePage />} />} />
+      <Route path="/profile/orders" element={<ProtectedRouteElement element={<UserOrders />} />} />
+      <Route path="/login" element={<AuthPage children={<LoginForm />}/>} />
+      <Route path="/register" element={<AuthPage children={<RegisterForm />}/>} />
+      <Route path="/forgot-password" element={<AuthPage children={<ForgotPasswordForm />}/>} />
+      <Route path="/reset-password" element={<AuthPage children={<ResetPasswordForm />}/>} />
+      <Route path="/auth" element={<ProtectedRouteElement />} />
+      <Route path="*" element={<NotFound404Page />} />
+    </Routes>
+    // </BrowserRouter>
   );
 }
 
