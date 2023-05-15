@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route, useLocation, useSearchParams } from 'reac
 
 import { searchParamsToObject } from '../../utils/url-decoding';
 import { addIngredientToConstructor, RESET_BURGER } from '../../services/actions/burgerConstructor';
+import { fetchUserInfo } from '../../services/actions/userAuth';
+import { getCookie } from '../../utils/cookie-set-get';
 
 import { ProtectedRouteElement } from '../protected-route-element/protected-route-element';
 
@@ -30,13 +32,18 @@ import { ModalIngredientDetails } from '../modal-ingredient-details/modal-ingred
 function App(): JSX.Element {
 
   const location = useLocation();
+  // console.log(location);
+
   const background = location.state?.background || null;
 
   const { items: allIngredients, currentBurgerItems } = useSelector(store => store.burgerConstructor);
   const dispatch = useDispatch();
 
   React.useEffect(() => {
-    dispatch(getItems())
+    dispatch(getItems());
+    if (!!getCookie('refreshToken')) {
+      dispatch(fetchUserInfo())
+    }
   }, [dispatch])
 
 
@@ -48,7 +55,7 @@ function App(): JSX.Element {
 
   React.useEffect(() => {
     if (currentBurgerItems.length === 0) {
-      dispatch({type: RESET_BURGER})
+      dispatch({ type: RESET_BURGER })
       if (!!allIngredients.length && initialUrlParams.current.length > 0 && initialUrlParams.current.length < 400) {
         const burgerConfigFromUrl = searchParamsToObject(initialUrlParams.current);
         // console.log(burgerConfigFromUrl);
@@ -74,13 +81,14 @@ function App(): JSX.Element {
       {!background && <Route path="/ingredients/:id" element={<IngredientPage />} />}
       <Route path="/profile" element={<ProtectedRouteElement element={<ProfilePage />} />} />
       <Route path="/profile/orders" element={<ProtectedRouteElement element={<UserOrders />} />} />
-      <Route path="/login" element={<AuthPage children={<LoginForm />}/>} />
-      <Route path="/register" element={<AuthPage children={<RegisterForm />}/>} />
-      <Route path="/forgot-password" element={<AuthPage children={<ForgotPasswordForm />}/>} />
-      <Route path="/reset-password" element={<AuthPage children={<ResetPasswordForm />}/>} />
+      <Route path="/login" element={<AuthPage children={<LoginForm />} />} />
+      <Route path="/register" element={<AuthPage children={<RegisterForm />} />} />
+      <Route path="/forgot-password" element={<AuthPage children={<ForgotPasswordForm />} />} />
+      <Route path="/reset-password" element={<AuthPage children={<ResetPasswordForm />} />} />
       <Route path="/auth" element={<ProtectedRouteElement />} />
       <Route path="*" element={<NotFound404Page />} />
     </Routes>
+
     // </BrowserRouter>
   );
 }

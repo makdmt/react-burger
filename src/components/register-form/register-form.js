@@ -16,7 +16,7 @@ export function RegisterForm() {
   const [registrationData, setRegistrationData] = React.useState({email: '', password: '', name: ''});
   const dispatch = useDispatch();
 
-  const {registrationRequest, registrationFailedUserExist, registrationFailed, registrationSuccess} = useSelector(state => state.userAuth);
+  const {registrationRequest, registrationFailedUserExist, registrationFailed, registrationSuccess, authUser} = useSelector(state => state.userAuth);
 
   React.useEffect(() => {
     return () => dispatch({ type: RESET_AUTH_REQUEST_STATUSES });
@@ -30,6 +30,12 @@ export function RegisterForm() {
     event.preventDefault();
     dispatch(registrateNewUser(registrationData))
   })
+
+  if (authUser) {
+    return (
+      <Navigate to='/' replace={true}/>
+    )
+  }
 
 
   if (registrationSuccess) {

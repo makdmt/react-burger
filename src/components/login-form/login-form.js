@@ -1,5 +1,6 @@
 import React from "react";
 
+import { useForm } from "../../hooks/useForm";
 import { useSelector, useDispatch } from "react-redux";
 import { login, RESET_AUTH_REQUEST_STATUSES } from "../../services/actions/userAuth";
 
@@ -13,7 +14,8 @@ import styles from './login-form.module.css'
 
 export function LoginForm() {
 
-  const [registrationData, setRegistrationData] = React.useState({email: '', password: ''});
+  // const [registrationData, setRegistrationData] = React.useState({email: '', password: ''});
+  const {values: registrationData, handleChange: onChange, setValues: setRegistrationData} = useForm({email: '', password: ''});
   const dispatch = useDispatch();
 
   const {authRequest, authIncorrectPassword, authServerFailed, authUser} = useSelector(state => state.userAuth);
@@ -26,9 +28,9 @@ export function LoginForm() {
     return () => dispatch({ type: RESET_AUTH_REQUEST_STATUSES });
   }, [])
 
-  const onChange = event => {
-    setRegistrationData({...registrationData, [event.target.name]: event.target.value});
-  }
+  // const onChange = event => {
+  //   setRegistrationData({...registrationData, [event.target.name]: event.target.value});
+  // }
 
   const onLoginSubmit = React.useCallback(event => {
     event.preventDefault();
@@ -38,7 +40,7 @@ export function LoginForm() {
 
   if (authUser) {
     return (
-      location?.state?.navigateAfter ? <Navigate to={location.state.navigateAfter} /> : <Navigate to='/' />
+      location?.state?.navigateAfter ? <Navigate to={location.state.navigateAfter} replace={true} /> : <Navigate to='/' replace={true} />
     )
   }
 

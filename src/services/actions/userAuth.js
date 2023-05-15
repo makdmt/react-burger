@@ -2,6 +2,7 @@ import {
    registrateNewUserPost,
    authPost,
    logoutPost,
+   runWithTokenCheck,
    getUserInfo,
    patchUserInfo,
    updateAccessTokenPost,
@@ -98,9 +99,6 @@ function login(authData) {
     }
   })
       .catch(err => {
-        // if (err?.body) {
-        //   console.log(err.body);
-        // }
         dispatch({
           type: AUTH_SERVER_FAILED
         });
@@ -138,7 +136,8 @@ function fetchUserInfo() {
     dispatch({
       type: FETCH_USER_INFO_REQUEST
     });
-    getUserInfo(getCookie('accessToken'))
+    // getUserInfo(getCookie('accessToken'))
+    runWithTokenCheck(getUserInfo)
       .then(res => {
         if (res && res.success) {
           dispatch({
@@ -245,8 +244,6 @@ function resetUserPassword(resetPasswordData) {
       });
   }
 };
-
-
 
 
 export {

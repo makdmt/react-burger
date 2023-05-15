@@ -16,7 +16,7 @@ export function ForgotPasswordForm() {
   const [registrationData, setRegistrationData] = React.useState({email: ''});
   const dispatch = useDispatch();
 
-  const {forgotPasswordRequest, forgotPasswordFailed, forgotPasswordSuccess} = useSelector(state => state.userAuth);
+  const {forgotPasswordRequest, forgotPasswordFailed, forgotPasswordSuccess, authUser} = useSelector(state => state.userAuth);
 
   const onChange = event => {
     setRegistrationData({...registrationData, [event.target.name]: event.target.value});
@@ -27,6 +27,11 @@ export function ForgotPasswordForm() {
     dispatch(forgotUserPassword(registrationData))
   })
 
+  if (authUser) {
+    return (
+      <Navigate to='/' replace={true}/>
+    )
+  }
 
   if (forgotPasswordSuccess) {
     return (

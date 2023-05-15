@@ -30,7 +30,9 @@ export function ResetPasswordForm() {
   })
 
   if (location?.state?.navigatedFrom !== '/forgot-password') {
-    return null;
+    return (
+    <Navigate to='/' replace={true} />
+    )
   }
 
   if (resetPasswordSuccess) {
