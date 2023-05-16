@@ -137,7 +137,7 @@ async function updateAccessTokenPost(refreshToken) {
       token: refreshToken
     }),
   })
-  // .then(res => checkResponse(res))
+  .then(res => checkResponse(res))
 }
 
 async function forgotUserPasswordPost({ email }) {
@@ -168,27 +168,30 @@ async function resetUserPasswordPost({ password, token }) {
     .then(res => checkResponse(res))
 }
 
-// const checkReponse = (res) => {
-//   return res.ok ? res.json() : res.json().then((err) => Promise.reject(err));
-// };
+const checkReponse = (res) => {
+  return res.ok ? res.json() : res.json().then((err) => Promise.reject(err));
+};
 
-// const fetchWithRefresh = async (url, options) => {
-//   try {
-//     const res = await fetch(url, options); //делаем запрос
-//     return await checkReponse(res);
-//   } catch (err) {
-//     if (err.message === "jwt expired") {
-//       const refreshData = await refreshToken(); //обновляем токен
-//       localStorage.setItem("refreshToken", refreshData.refreshToken);
-//       localStorage.setItem("accessToken", refreshData.accessToken); //(или в cookies)
-//       options.headers.authorization = refreshData.accessToken;
-//       const res = await fetch(url, options); //вызываем перезапрос данных
-//       return await checkReponse(res);
-//     } else {
-//       return Promise.reject(err);
-//     }
-//   }
-// };
+const fetchWithRefresh = async (url, options) => {
+  try {
+    const res = await fetch(url, options); //делаем запрос
+    return await checkReponse(res);
+  } catch (err) {
+    if (err.message === "jwt expired") {
+      const refreshData = await updateAccessTokenPost(getCookie('refreshToken')); //обновляем токен
+      setCookie('accessToken', refreshData.accessToken, { 'max-age': 12000, 'path': '/' })
+      setCookie('refreshToken', refreshData.refreshToken, { 'max-age': 2500000, 'path': '/' })
+
+      // localStorage.setItem("refreshToken", refreshData.refreshToken);
+      // localStorage.setItem("accessToken", refreshData.accessToken); //(или в cookies)
+      options.headers.authorization = refreshData.accessToken;
+      const res = await fetch(url, options); //вызываем перезапрос данных
+      return await checkReponse(res);
+    } else {
+      return Promise.reject(err);
+    }
+  }
+};
 
 
 export {
@@ -202,5 +205,6 @@ export {
   patchUserInfo,
   updateAccessTokenPost,
   forgotUserPasswordPost,
-  resetUserPasswordPost
+  resetUserPasswordPost,
+  fetchWithRefresh
 }

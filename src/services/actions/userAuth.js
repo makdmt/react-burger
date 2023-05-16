@@ -4,6 +4,7 @@ import {
    logoutPost,
    runWithTokenCheck,
    getUserInfo,
+   fetchWithRefresh,
    patchUserInfo,
    updateAccessTokenPost,
    forgotUserPasswordPost,
@@ -85,7 +86,7 @@ function login(authData) {
     authPost(authData)
       .then(res => {
         if (res && res.success) {
-          setCookie('accessToken', res.accessToken, {'max-age': 1200, 'path': '/'})
+          setCookie('accessToken', res.accessToken, {'max-age': 12000, 'path': '/'})
           setCookie('refreshToken', res.refreshToken, {'max-age': 2500000, 'path': '/'})
           dispatch({
             type: AUTH_SUCCESS,
@@ -137,7 +138,14 @@ function fetchUserInfo() {
       type: FETCH_USER_INFO_REQUEST
     });
     // getUserInfo(getCookie('accessToken'))
-    runWithTokenCheck(getUserInfo)
+    // runWithTokenCheck(getUserInfo)
+    fetchWithRefresh('https://norma.nomoreparties.space/api/auth/user', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': getCookie('accessToken')
+      },
+    })
       .then(res => {
         if (res && res.success) {
           dispatch({
