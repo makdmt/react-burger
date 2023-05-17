@@ -99,6 +99,17 @@ async function runWithTokenCheck(fetchWithTokenFunc) {
   )
 }
 
+export const getUserInfoConf = {
+  url: `${apiAuthUrl}/user`,
+  options: {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'authorization': getCookie('accessToken')
+    }
+  }
+}
+
 
 async function getUserInfo(accessToken) {
   return fetch(`${apiAuthUrl}/user`, {
@@ -109,6 +120,17 @@ async function getUserInfo(accessToken) {
     },
   })
   // .then(res => checkResponse(res))
+}
+
+export const patchUserInfoConf = {
+  url: `${apiAuthUrl}/user`,
+  options: {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      'authorization': getCookie('accessToken')
+    }
+  }
 }
 
 async function patchUserInfo(accessToken, { email, password, name }) {

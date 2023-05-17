@@ -4,8 +4,10 @@ import {
    logoutPost,
    runWithTokenCheck,
    getUserInfo,
+   getUserInfoConf,
    fetchWithRefresh,
    patchUserInfo,
+   patchUserInfoConf,
    updateAccessTokenPost,
    forgotUserPasswordPost,
    resetUserPasswordPost } from "../../utils/burger-api";
@@ -139,13 +141,7 @@ function fetchUserInfo() {
     });
     // getUserInfo(getCookie('accessToken'))
     // runWithTokenCheck(getUserInfo)
-    fetchWithRefresh('https://norma.nomoreparties.space/api/auth/user', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'authorization': getCookie('accessToken')
-      },
-    })
+    fetchWithRefresh(getUserInfoConf.url, getUserInfoConf.options)
       .then(res => {
         if (res && res.success) {
           dispatch({
@@ -168,7 +164,9 @@ function editUserInfo(userData) {
     dispatch({
       type: PATCH_USER_INFO_REQUEST
     });
-    patchUserInfo(getCookie('accessToken'), userData)
+    // patchUserInfo(getCookie('accessToken'), userData)
+    patchUserInfoConf.options.body = JSON.stringify(userData);
+    fetchWithRefresh(patchUserInfoConf.url, patchUserInfoConf.options)
       .then(res => {
         if (res && res.success) {
           dispatch({
