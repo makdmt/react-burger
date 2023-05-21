@@ -9,11 +9,14 @@ import { addIngredientToConstructor, RESET_BURGER } from '../../services/actions
 import { fetchUserInfo } from '../../services/actions/userAuth';
 import { getCookie } from '../../utils/cookie-set-get';
 
+import { WS_FEED_CONNECTION_START, WS_FEED_CONNECTION_CLOSED } from '../../services/actions/wsFeed';
+
 import { ProtectedRouteElement } from '../protected-route-element/protected-route-element';
 
 import { MainPage } from '../../pages/main-page';
+import { FeedPage } from '../../pages/feed-page';
 import { ProfilePage } from '../../pages/profile-page';
-import { UserOrders } from '../../pages/user-orders-page';
+import { UserOrdersPage } from '../../pages/user-orders-page';
 import { IngredientPage } from '../../pages/ingredient-page';
 
 
@@ -25,14 +28,14 @@ import { ResetPasswordForm } from '../reset-password-form/reset-password-form';
 
 import { NotFound404Page } from '../../pages/not-found404-page';
 
-
 import { ModalIngredientDetails } from '../modal-ingredient-details/modal-ingredient-details';
+import { ModalHistOrderDetails } from '../modal-hist-order-details/modal-hist-order-details';
+import { OrderHistPage } from '../../pages/order-hist-page';
 
 
 function App(): JSX.Element {
 
   const location = useLocation();
-  // console.log(location);
 
   const background = location.state?.background || null;
 
@@ -71,6 +74,12 @@ function App(): JSX.Element {
   }, [allIngredients])
 
 
+  React.useEffect(() => {
+    dispatch({ type: WS_FEED_CONNECTION_START });
+    return () => dispatch({ type: WS_FEED_CONNECTION_CLOSED });
+  }, [])
+
+
   return (
     //  <BrowserRouter>
     <Routes>
@@ -79,8 +88,17 @@ function App(): JSX.Element {
         <Route path="/ingredients/:id" element={<ModalIngredientDetails />} />
       </Route>}
       {!background && <Route path="/ingredients/:id" element={<IngredientPage />} />}
+      <Route path="/feed" element={<FeedPage />} />
+      {background && <Route path="/feed" element={<FeedPage />}>
+        <Route path="/feed/:id" element={<ModalHistOrderDetails />} />
+      </Route>}
+      {!background && <Route path="/feed/:id" element={<OrderHistPage />} />}
       <Route path="/profile" element={<ProtectedRouteElement element={<ProfilePage />} />} />
-      <Route path="/profile/orders" element={<ProtectedRouteElement element={<UserOrders />} />} />
+      <Route path="/profile/orders" element={<ProtectedRouteElement element={<UserOrdersPage />} />} />
+      {background && <Route path="/profile/orders" element={<ProtectedRouteElement element={<UserOrdersPage />} />}>
+        <Route path="/profile/orders/:id" element={<ModalHistOrderDetails />} />
+      </Route>}
+      {!background && <Route path="/profile/orders/:id" element={<OrderHistPage />} />}
       <Route path="/login" element={<AuthPage children={<LoginForm />} />} />
       <Route path="/register" element={<AuthPage children={<RegisterForm />} />} />
       <Route path="/forgot-password" element={<AuthPage children={<ForgotPasswordForm />} />} />

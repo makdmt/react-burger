@@ -19,6 +19,10 @@ const POST_ORDER_SUCCESS = 'POST_ORDER_SUCCESS';
 const POST_ORDER_FAILED = 'POST_ORDER_FAILED';
 const DELETE_ORDER_DETAILS_FROM_MODAL = 'DELETE_ORDER_DETAILS_FROM_MODAL';
 
+const PUT_HIST_ORDER_TO_MODAL = 'PUT_HIST_ORDER_TO_MODAL';
+const DELETE_HIST_ORDER_FROM_MODAL = 'DELETE_HIST_ORDER_FROM_MODAL';
+
+
 function getItems() {
   return function (dispatch) {
     dispatch({
@@ -93,5 +97,7 @@ export { GET_ITEMS_REQUEST,
   RESET_BURGER,
   completeOrder,
   addIngredientToConstructor,
-  removeIngredientFromConstructor
+  removeIngredientFromConstructor,
+  PUT_HIST_ORDER_TO_MODAL,
+  DELETE_HIST_ORDER_FROM_MODAL
  }
