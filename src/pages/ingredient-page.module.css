@@ -1,0 +1,11 @@
+.main {
+  margin: 0 auto;
+  max-width: 1240px;
+  display: flex;
+  justify-content: center;
+}
+
+.contentBlock {
+  margin-top: 11.2vh;
+  width: 600px;
+}

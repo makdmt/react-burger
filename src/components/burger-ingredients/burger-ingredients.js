@@ -11,6 +11,11 @@ import burgerIngredientStyles from './burger-ingredients.module.css'
 
 function BurgerIngredients() {
 
+  // useEffect(()=> {
+  //   console.log('смонтировался')
+  //   return () => {console.log('размонтировался')}
+  // },[])
+
   const products = useSelector(store => store.burgerConstructor.items);
 
   const sectionTitlesObj = {

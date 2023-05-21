@@ -1,11 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import { useSelector, useDispatch } from 'react-redux';
+
+import { useSearchParams, useLocation, useNavigate } from 'react-router-dom';
+
 import { completeOrder, addIngredientToConstructor, RESET_BURGER } from '../../services/actions/burgerConstructor';
 
 import { useDrop } from 'react-dnd/dist/hooks';
 
-import { ConstructorElement, Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import { ConstructorElement, Button, CurrencyIcon, LogoutIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import BurgerConstructorElement from '../burger-constructor-element/burger-constructor-element'
 
 import burgerConstructorStyles from './burger-constructor.module.css'
@@ -13,10 +16,30 @@ import burgerConstructorStyles from './burger-constructor.module.css'
 
 function BurgerConstructor() {
 
-  const { items: allIngredients } = useSelector(store => store.burgerConstructor);
+  const { items: allIngredients, orderPostRequest } = useSelector(store => store.burgerConstructor);
   const currentBurgerIngredients = useSelector(store => store.burgerConstructor.currentBurgerItems);
 
+  const { authUser} = useSelector(state => state.userAuth);
+
+
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [currentBurgerUrlParams, setCurrentBurgerUrlParams ] = useSearchParams({});
+
+  React.useEffect(() => {
+    const params = currentBurgerIngredients.reduce((acc, item) => {
+      if (acc.hasOwnProperty(item.ingredientDetails._id)) {acc[item.ingredientDetails._id] += 1;
+      } else {
+      acc[item.ingredientDetails._id] = 1;}
+      return acc;
+    },{})
+    setCurrentBurgerUrlParams(params);
+  },[currentBurgerIngredients])
+
+  const location = useLocation();
+
+  const [toggledOrderBtn, setToggledOrderBtn] = useState(false);
 
   const [{ backgroundColor }, dropTarget] = useDrop({
     accept: "ingredient",
@@ -54,10 +77,19 @@ function BurgerConstructor() {
   }, [currentBurgerIngredients]);
 
 
-  const completeOrderBtnHandler = () => {
+  const completeOrderBtnHandler = React.useCallback(() => {
+    if (currentBurgerIngredients.length === 0) {
+      setToggledOrderBtn(!toggledOrderBtn);
+      return;
+    }
+    if (authUser) {
     let burgerIngredientsId = currentBurgerIngredients.map(ingredient => ingredient.ingredientDetails._id);
     dispatch(completeOrder(burgerIngredientsId));
-  }
+    } else {
+      navigate('/auth', {replace: true, state: {navigateAfter: `${location.pathname}${location.search}`, loginMessage: `Для отправки заказа, необходимо авторизоваться!`}});
+    }
+
+  },[currentBurgerIngredients, authUser, toggledOrderBtn, location ])
 
   return (
     <section className={`${burgerConstructorStyles.burgerConstructor} mt-25`} style={{backgroundColor}}>
@@ -71,6 +103,9 @@ function BurgerConstructor() {
         />}
       </header>
       <ul style={{ height: `${4 * 96}px`}} className={`${burgerConstructorStyles.burgerConstructorList}`} ref={dropTarget}>
+      {currentBurgerIngredients.length === 0 && (
+      <p className='text text_type_main-default' style={!toggledOrderBtn ? {} : {color: '#00CCCC'}}><LogoutIcon type={toggledOrderBtn ? "success" : "primary"} /> Выберите индгрединеты слева и перетащите сюда!</p>
+      )}
         {currentBurgerIngredients.filter(ingredient => ingredient.ingredientDetails.type != 'bun').map((ingredient) => (
           <BurgerConstructorElement key={ingredient.uuid} ingredientUuid={ingredient.uuid} ingredient={ingredient.ingredientDetails} />
         ))}
@@ -87,7 +122,7 @@ function BurgerConstructor() {
       </footer>
       <div className={`${burgerConstructorStyles.burgerConstructorConfirmBlock} mt-10`}>
         <p className='text text_type_digits-medium mr-10'>{totalPrice} <CurrencyIcon type="primary" /></p>
-        <Button htmlType="button" type="primary" size="medium" onClick={completeOrderBtnHandler}>Оформить заказ</Button>
+        <Button htmlType="button" disabled={orderPostRequest} type="primary" size="medium" onClick={completeOrderBtnHandler}>{orderPostRequest ? 'Отправляем заказ...' : 'Оформить заказ'}</Button>
       </div>
 
     </section>

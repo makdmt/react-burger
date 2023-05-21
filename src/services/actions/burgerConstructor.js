@@ -1,4 +1,5 @@
 import { getIngredients, postOrder } from '../../utils/burger-api'
+import { getCookie } from '../../utils/cookie-set-get';
 import { v4 as uuidv4 } from 'uuid'
 
 const GET_ITEMS_REQUEST = 'GET_ITEMS_REQUEST';
@@ -13,6 +14,7 @@ const RESET_BURGER = 'RESET_BURGER';
 const PUT_INGREDIENT_DETAILS_TO_MODAL = 'PUT_INGREDIENT_DETAILS_TO_MODAL';
 const DELETE_INGREDIENT_DETAILS_FROM_MODAL = 'DELETE_INGREDIENT_DETAILS_FROM_MODAL';
 
+const POST_ORDER_REQUEST = 'POST_ORDER_REQUEST'
 const POST_ORDER_SUCCESS = 'POST_ORDER_SUCCESS';
 const POST_ORDER_FAILED = 'POST_ORDER_FAILED';
 const DELETE_ORDER_DETAILS_FROM_MODAL = 'DELETE_ORDER_DETAILS_FROM_MODAL';
@@ -42,7 +44,10 @@ function getItems() {
 
 function completeOrder(ingredientsId) {
   return function (dispatch) {
-    postOrder(ingredientsId)
+    dispatch({
+      type: POST_ORDER_REQUEST
+    });
+    postOrder(ingredientsId, getCookie('accessToken'))
     .then(res => {
       if (res && res.success) {
         dispatch({
@@ -78,6 +83,7 @@ export { GET_ITEMS_REQUEST,
   getItems,
   PUT_INGREDIENT_DETAILS_TO_MODAL,
   DELETE_INGREDIENT_DETAILS_FROM_MODAL,
+  POST_ORDER_REQUEST,
   POST_ORDER_SUCCESS,
   POST_ORDER_FAILED,
   DELETE_ORDER_DETAILS_FROM_MODAL,
