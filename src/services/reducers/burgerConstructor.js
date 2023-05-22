@@ -11,7 +11,9 @@ import {
   POST_ORDER_REQUEST,
   POST_ORDER_SUCCESS,
   POST_ORDER_FAILED,
-  DELETE_ORDER_DETAILS_FROM_MODAL
+  DELETE_ORDER_DETAILS_FROM_MODAL,
+  PUT_HIST_ORDER_TO_MODAL,
+  DELETE_HIST_ORDER_FROM_MODAL
 
 } from '../actions/burgerConstructor'
 
@@ -24,6 +26,7 @@ const initialState = {
   orderPostRequest: false,
   orderDetails: null,
   selectedIngredientDetails: null,
+  histOrderInModal: null
 }
 
 export const burgerReducer = (state = initialState, action) => {
@@ -126,6 +129,18 @@ export const burgerReducer = (state = initialState, action) => {
       return {
         ...state,
         orderDetails: null
+      }
+    }
+    case PUT_HIST_ORDER_TO_MODAL: {
+      return {
+        ...state,
+        histOrderInModal: action.payload
+      }
+    }
+    case DELETE_HIST_ORDER_FROM_MODAL: {
+      return {
+        ...state,
+        histOrderInModal: null
       }
     }
     default: {

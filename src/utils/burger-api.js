@@ -105,7 +105,7 @@ export const getUserInfoConf = {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'authorization': getCookie('accessToken')
+      get authorization () { return getCookie('accessToken')},
     }
   }
 }

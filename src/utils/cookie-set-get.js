@@ -29,6 +29,11 @@ export function getCookie(name) {
   return matches ? decodeURIComponent(matches[1]) : undefined;
 }
 
+export function removeBearer(token) {
+  if (typeof token === 'string' ) return token.split('Bearer ')[1];
+  return token;
+}
+
 export function deleteCookie(name) {
   setCookie(name, null, { expires: -1 });
 }

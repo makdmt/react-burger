@@ -1,0 +1,38 @@
+.listElement {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.lastElement {
+  margin-left: auto;
+}
+
+.gradientBackground {
+  width: 64px;
+  height: 64px;
+  flex: 0 0 64px;
+  background: linear-gradient(to right, #801AB2, #4C4CFF);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.iconContainer {
+  width: 60px;
+  height: 60px;
+  background-color: #131316;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+
+.iconContainer>img {
+  width: 170%;
+
+}
+

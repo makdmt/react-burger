@@ -1,0 +1,21 @@
+.section {
+  width: 50%;
+}
+
+.listContainer {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-height: 257px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  overflow: hidden;
+}
+
+.listElementActive {
+  color: #00CCCC;
+}
+
+
