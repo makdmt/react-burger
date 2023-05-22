@@ -31,6 +31,7 @@ import { NotFound404Page } from '../../pages/not-found404-page';
 import { ModalIngredientDetails } from '../modal-ingredient-details/modal-ingredient-details';
 import { ModalHistOrderDetails } from '../modal-hist-order-details/modal-hist-order-details';
 import { OrderHistPage } from '../../pages/order-hist-page';
+import { UserOrderHistPage } from '../../pages/user-order-hist-page';
 
 
 function App(): JSX.Element {
@@ -98,7 +99,7 @@ function App(): JSX.Element {
       {background && <Route path="/profile/orders" element={<ProtectedRouteElement element={<UserOrdersPage />} />}>
         <Route path="/profile/orders/:id" element={<ModalHistOrderDetails />} />
       </Route>}
-      {!background && <Route path="/profile/orders/:id" element={<OrderHistPage />} />}
+      {!background && <Route path="/profile/orders/:id" element={<UserOrderHistPage />} />}
       <Route path="/login" element={<AuthPage children={<LoginForm />} />} />
       <Route path="/register" element={<AuthPage children={<RegisterForm />} />} />
       <Route path="/forgot-password" element={<AuthPage children={<ForgotPasswordForm />} />} />

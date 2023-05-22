@@ -30,7 +30,8 @@ export function getCookie(name) {
 }
 
 export function removeBearer(token) {
-  return token.split('Bearer ')[1];
+  if (typeof token === 'string' ) return token.split('Bearer ')[1];
+  return token;
 }
 
 export function deleteCookie(name) {

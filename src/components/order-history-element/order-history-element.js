@@ -17,9 +17,9 @@ export function OrderHistoryElement({ name, number, ingredients, createdAt, stat
   const { items: allIngredients, currentBurgerItems } = useSelector(store => store.burgerConstructor);
 
   const orderPrice = React.useMemo(() => {
-    if (ingredients.length !== 0 && allIngredients !== 0) {
+    if (ingredients.length !== 0 && allIngredients.length !== 0) {
       return ingredients.reduce((acc, item) => {
-        return acc + allIngredients.find(ingredient => ingredient._id === item).price
+        return acc + allIngredients.find(ingredient => ingredient._id === item)?.price
       }, 0)
     }
     return 'не известно'

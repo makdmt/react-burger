@@ -19,6 +19,7 @@ export function FeedPage(): JSX.Element {
   const { wsFeedConnected, feedOrders } = useSelector(store => store.wsFeed);
 
   const orderDetails = useSelector(store => store.burgerConstructor.orderDetails);
+  const { items: allIngredients, currentBurgerItems } = useSelector(store => store.burgerConstructor);
 
   // React.useEffect(() => {
   //   dispatch({ type: WS_FEED_CONNECTION_START });
@@ -28,7 +29,13 @@ export function FeedPage(): JSX.Element {
 
   const ordersToFeed = React.useMemo(() => {
     if (feedOrders && feedOrders.orders) {
-      return feedOrders.orders.map(order => {
+      const checkedOrders = feedOrders.orders.filter(order => {
+        return order.ingredients.every(ingredient => {
+          return allIngredients.findIndex(item => item._id === ingredient) !== -1
+        })
+      })
+
+      return checkedOrders.map(order => {
         const orderWOutStatus = { ...order }
         delete orderWOutStatus.status
         return orderWOutStatus;
