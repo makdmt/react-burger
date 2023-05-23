@@ -6,6 +6,10 @@ import { Outlet } from 'react-router-dom';
 
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { TouchBackend } from 'react-dnd-touch-backend';
+import { MultiBackend, TouchTransition, MouseTransition, Preview, usePreview } from 'react-dnd-multi-backend';
+
+import IngredientCard from '../components/ingredient-card/ingredient-card';
 
 import AppHeader from '../components/app-header/app-header';
 import BurgerConstructor from '../components/burger-constructor/burger-constructor';
@@ -14,6 +18,50 @@ import OrderDelails from '../components/order-details/order-details';
 import withModal from '../components/hocs/withModal';
 
 import appStyles from './main-page.module.css';
+
+const HTML5toTouch = {
+  backends: [
+    {
+      id: 'html5',
+      backend: HTML5Backend,
+      transition: MouseTransition
+    },
+    {
+      id: 'touch',
+      backend: TouchBackend,
+      preview: true,
+      transition: TouchTransition
+    }
+  ]
+};
+
+
+const IngredientPreview = () => {
+
+  const preview = usePreview();
+  const allIngredients = useSelector(store => store.burgerConstructor.items);
+
+  if (!preview.display) {
+    return null
+  }
+
+  const { itemType, item, style } = preview;
+
+  const newStyle = {
+    ...style,
+    opacity: .4
+  };
+
+  const ingredient = allIngredients.find(i => i._id === item.ingredientId)
+
+  return (
+    <div style={newStyle}>
+      {/* <IngredientCard {...ingredient} /> */}
+      <img src={ingredient.image} alt={ingredient.name} />
+    </div>
+  );
+}
+
 
 export function MainPage(): JSX.Element {
 
@@ -51,9 +99,10 @@ export function MainPage(): JSX.Element {
         {isLoading && 'Загрузка...'}
         {hasError && 'Произошла ошибка, попробуйте перезагрузить страницу'}
         {!isLoading && !hasError &&
-          <DndProvider key='uniq123' backend={HTML5Backend} >
-            <BurgerIngredients key='uniq23'/>
-            <BurgerConstructor key='uniq3'/>
+          <DndProvider key='uniq123' backend={MultiBackend} options={HTML5toTouch} >
+            <IngredientPreview />
+            <BurgerIngredients key='uniq23' />
+            <BurgerConstructor key='uniq3' />
           </DndProvider>
         }
       </main>
