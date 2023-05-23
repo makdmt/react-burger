@@ -74,6 +74,14 @@ function BurgerIngredients() {
   }
 
 
+  const tabClickHandler =  React.useCallback((tabNumber) => {
+    const scrolledContainer = document.querySelector(`.${burgerIngredientStyles.ingredientsSectionsConatiner}`);
+    const targetsToScroll = Array.from(scrolledContainer.children);
+    const targetToScroll = targetsToScroll[tabNumber];
+    targetToScroll.scrollIntoView({behavior: "smooth"});
+  },[])
+
+
   return (
     <section className={burgerIngredientStyles.container}>
 
@@ -81,7 +89,7 @@ function BurgerIngredients() {
       <div className={`${burgerIngredientStyles.tabContainer} mb-8`} >
         {sectionTitlesArr.map((category, index) => {
           return (
-            <Tab key={category[0]} value={index} active={currentTab === index}>{category[1]}</Tab>
+            <Tab key={category[0]} value={index} onClick={tabClickHandler} active={currentTab === index}>{category[1]}</Tab>
           )
         })}
       </div>
