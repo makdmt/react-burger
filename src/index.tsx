@@ -70,7 +70,7 @@ const enhancer = composeEnhancers(applyMiddleware(thunk,
  socketMiddleware(wsFeedUrl, wsFeedActions),
  socketMiddleware(wsUserOrdersUrl, wsUserOrdersActions, () => removeBearer(getCookie('accessToken')))));
 // const store = createStore(rootReducer, enhancer);
-const store = createStore(rootReducer, enhancer);
+export const store = createStore(rootReducer, enhancer);
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

@@ -1,5 +1,3 @@
-import { getCookie } from "../../utils/cookie-set-get";
-
 export const socketMiddleware = (wsUrl, wsActions, getToken) => {
   return store => {
     let socket = null;
@@ -14,10 +12,9 @@ export const socketMiddleware = (wsUrl, wsActions, getToken) => {
         socket = new WebSocket(`${wsUrl}?token=${getToken()}`);
       }
 
-      if (type === wsInit && !getToken ) {
+      if (type === wsInit && !getToken) {
         socket = new WebSocket(`${wsUrl}`);
       }
-
 
       if (socket) {
         socket.onopen = event => {

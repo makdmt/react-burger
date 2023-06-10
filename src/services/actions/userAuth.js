@@ -1,16 +1,14 @@
 import {
-   registrateNewUserPost,
-   authPost,
-   logoutPost,
-   runWithTokenCheck,
-   getUserInfo,
-   getUserInfoConf,
-   fetchWithRefresh,
-   patchUserInfo,
-   patchUserInfoConf,
-   updateAccessTokenPost,
-   forgotUserPasswordPost,
-   resetUserPasswordPost } from "../../utils/burger-api";
+  registrateNewUserPost,
+  authPost,
+  logoutPost,
+  getUserInfoConf,
+  fetchWithRefresh,
+  patchUserInfoConf,
+  updateAccessTokenPost,
+  forgotUserPasswordPost,
+  resetUserPasswordPost
+} from "../../utils/burger-api";
 
 
 import { setCookie, getCookie, deleteCookie } from "../../utils/cookie-set-get";
@@ -65,16 +63,19 @@ function registrateNewUser(authData) {
             type: REGISTRATION_SUCCESS,
           })
         }
-        if (res && !res.success) {
+      })
+      .catch(err => {
+        if (err && !err.success) {
           dispatch({
             type: REGISTRATION_FAILED_USER_EXIST,
           })
-        }
-      })
-      .catch(err => {
+        } else {
+
+
         dispatch({
           type: REGISTRATION_FAILED
         });
+      }
         console.error(err);
       });
   }
@@ -88,23 +89,24 @@ function login(authData) {
     authPost(authData)
       .then(res => {
         if (res && res.success) {
-          setCookie('accessToken', res.accessToken, {'max-age': 12000, 'path': '/'})
-          setCookie('refreshToken', res.refreshToken, {'max-age': 2500000, 'path': '/'})
+          setCookie('accessToken', res.accessToken, { 'max-age': 12000, 'path': '/' })
+          setCookie('refreshToken', res.refreshToken, { 'max-age': 2500000, 'path': '/' })
           dispatch({
             type: AUTH_SUCCESS,
-            payload: {...res.user}
+            payload: { ...res.user }
           })
-      }
-      if (res && !res.success && res.message === 'email or password are incorrect') {
-        dispatch({
-          type: AUTH_INCORRECT_PASSWORD
-        })
-    }
-  })
+        }
+      })
       .catch(err => {
-        dispatch({
-          type: AUTH_SERVER_FAILED
-        });
+        if (err && !err.success && err.message === 'email or password are incorrect') {
+          dispatch({
+            type: AUTH_INCORRECT_PASSWORD
+          })
+        } else {
+          dispatch({
+            type: AUTH_SERVER_FAILED
+          });
+        }
         console.error(err);
       });
   }
@@ -118,7 +120,7 @@ function logout() {
     logoutPost(getCookie('refreshToken'))
       .then(res => {
         if (res && res.success) {
-            dispatch({
+          dispatch({
             type: LOGOUT_SUCCESS,
           })
           deleteCookie('accessToken');
@@ -146,7 +148,7 @@ function fetchUserInfo() {
         if (res && res.success) {
           dispatch({
             type: FETCH_USER_INFO_SUCCESS,
-            payload: {...res.user}
+            payload: { ...res.user }
           })
         }
       })
@@ -171,7 +173,7 @@ function editUserInfo(userData) {
         if (res && res.success) {
           dispatch({
             type: PATCH_USER_INFO_SUCCESS,
-            payload: {...res.user}
+            payload: { ...res.user }
           })
         }
       })
@@ -192,7 +194,7 @@ function updateAccessToken() {
     updateAccessTokenPost(getCookie('refreshToken'))
       .then(res => {
         if (res && res.success) {
-          setCookie('accessToken', res.accessToken, {'max-age': 1200, 'path': '/'})
+          setCookie('accessToken', res.accessToken, { 'max-age': 1200, 'path': '/' })
           dispatch({
             type: UPDATE_ACCESS_TOKEN_SUCCESS
           })
