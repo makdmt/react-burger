@@ -25,7 +25,7 @@ export const UserDetailsForm: FC<{}> = () => {
   },[formData])
 
   const formChanged = React.useMemo<boolean>(() => {
-    if (formData.name === authUser.name && formData.email === authUser.email && formData.password === '') {
+    if (authUser && formData.name === authUser.name && formData.email === authUser.email && formData.password === '') {
       return false;
     } else {
       return true;

@@ -30,7 +30,38 @@ import {
 
 } from '../actions/userAuth'
 
-const initialState = {
+import type { TUserAuthActions } from '../actions/userAuth'
+import type { TUserDataServerResponce } from '../types/data'
+
+interface IUserAuthState {
+  registrationRequest: boolean,
+  registrationFailedUserExist: boolean,
+  registrationFailed: boolean,
+  registrationSuccess: boolean,
+  authRequest: boolean,
+  authIncorrectPassword: boolean,
+  authServerFailed: boolean,
+  logoutRequest: boolean,
+  logoutFailed: boolean,
+  logoutSuccess: boolean,
+  fetchUserInfoRequest: boolean,
+  fetchUserInfoFailed: boolean,
+  patchUserInfoRequest: boolean,
+  patchUserInfoFailed: boolean,
+  patchUserInfoSuccess: boolean,
+  updateAccessTokenRequest: boolean,
+  updateAccessTokenSuccess: boolean,
+  updateAccessTokenFailed: boolean,
+  forgotPasswordRequest: boolean,
+  forgotPasswordFailed: boolean,
+  forgotPasswordSuccess: boolean,
+  resetPasswordRequest: boolean,
+  resetPasswordFailed: boolean,
+  resetPasswordSuccess: boolean,
+  authUser: null | TUserDataServerResponce,
+}
+
+const initialState: IUserAuthState = {
   registrationRequest: false,
   registrationFailedUserExist: false,
   registrationFailed: false,
@@ -58,7 +89,7 @@ const initialState = {
   authUser: null,
 }
 
-export const userAuthReducer = (state = initialState, action) => {
+export const userAuthReducer = (state: IUserAuthState = initialState, action: TUserAuthActions): IUserAuthState => {
   switch (action.type) {
     case REGISTRATION_REQUEST: {
       return {

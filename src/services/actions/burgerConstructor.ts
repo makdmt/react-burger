@@ -72,7 +72,7 @@ export interface IPostOrderRequest {
 }
 export interface IPostOrderSuccess {
   readonly type: typeof POST_ORDER_SUCCESS;
-  readonly payload: string
+  readonly payload: string | number;
 }
 export interface IPostOrderFailed {
   readonly type: typeof POST_ORDER_FAILED;

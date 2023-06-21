@@ -83,3 +83,4 @@ export type TUserData = {
 
 export type TUserDataForm = Omit<TUserData, 'id'>
 export type TUserAuthForm = Omit<TUserData, 'id' | 'name'>
+export type TUserDataServerResponce = Omit<TUserData, 'id' | 'password'>

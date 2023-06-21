@@ -1,5 +1,6 @@
 import { setCookie, getCookie } from './cookie-set-get'
-import { IServerResponse, TResponseBody, IFetchRequest, IIngredient, IOrderDetails, TUserDataForm, TUserAuthForm } from '../services/types/data';
+import { IServerResponse, TResponseBody, IFetchRequest, IIngredient, IOrderDetails, TUserDataForm, TUserAuthForm, TUserDataServerResponce } from '../services/types/data';
+import { TUserData } from '../services/types/data';
 
 const apiUrl: string = 'https://norma.nomoreparties.space/api';
 const apiAuthUrl: string = 'https://norma.nomoreparties.space/api/auth';
@@ -50,7 +51,7 @@ async function registrateNewUserPost({ email, password, name }: TUserDataForm): 
     .then(res => checkResponse(res))
 }
 
-async function authPost({ email, password }: TUserAuthForm): Promise<TResponseBody> {
+async function authPost({ email, password }: TUserAuthForm): Promise<TResponseBody & { accessToken: string, refreshToken: string, user: TUserDataServerResponce }> {
   return fetch(`${apiAuthUrl}/login`, {
     method: 'POST',
     headers: {
@@ -100,7 +101,7 @@ async function getUserInfo(accessToken: string): Promise<IServerResponse> {
   // .then(res => checkResponse(res))
 }
 
-export const patchUserInfoConf: {url: string, options: IFetchRequest} = {
+export const patchUserInfoConf: {url: string, options: IFetchRequest & {body?: string}} = {
   url: `${apiAuthUrl}/user`,
   options: {
     method: 'PATCH',
@@ -170,7 +171,7 @@ async function resetUserPasswordPost({ password, token }: {password: string, tok
 
 
 
-const fetchWithRefresh = async (url: string, options: IFetchRequest): Promise<TResponseBody> => {
+const fetchWithRefresh = async (url: string, options: IFetchRequest): Promise<TResponseBody<'user', TUserDataServerResponce>> => {
   try {
     const res = await fetch(url, options); //делаем запрос
     return await checkResponse(res);
