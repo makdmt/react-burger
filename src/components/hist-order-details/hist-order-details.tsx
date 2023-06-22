@@ -1,7 +1,7 @@
 import React, {FC} from "react";
 
 // import { useSelector, useDispatch } from '../../services/types/index';
-import { useSelector, useDispatch} from "react-redux";
+import { useSelector, useDispatch} from '../../services/types/index';
 import { PUT_HIST_ORDER_TO_MODAL, DELETE_HIST_ORDER_FROM_MODAL } from "../../services/actions/burgerConstructor";
 
 import { useLocation, useParams } from "react-router-dom";
@@ -12,9 +12,10 @@ import { RelatedTime } from "../related-time/related-time";
 import { PriceElement } from "../price-element/price-element";
 
 import styles from "./hist-order-details.module.css";
+import { IIngredient } from "../../services/types/data";
 
 
-export const HistOrderDetails = () => {
+export const HistOrderDetails: FC = () => {
 
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -28,17 +29,23 @@ export const HistOrderDetails = () => {
         return ['wsFeed', 'feedOrders']
       case 'profile':
         return ['wsUserOrders', 'userOrders']
+      default:
+        return ['wsFeed', 'feedOrders']
+
     }
   }, [location])
+  let one = storeBranch[0]
 
 
   const allOrders = useSelector(store => {
-    if (store.hasOwnProperty(storeBranch[0])) {
-      if (store[storeBranch[0]].hasOwnProperty(storeBranch[1])) {
-        return store[storeBranch[0]][storeBranch[1]];
-      }
-    }
-      });
+    if (storeBranch[0] === 'wsFeed') return store.wsFeed.feedOrders?.orders
+    if (storeBranch[0] === 'wsUserOrders') return store.wsUserOrders.userOrders?.orders
+    return null })
+
+
+  // const allOrders = useSelector(store => {
+  //       return store[storeBranch[0]][storeBranch[1]].orders;
+  //     });
 
 
   const { items: allIngredients, currentBurgerItems } = useSelector(store => store.burgerConstructor);
@@ -49,7 +56,7 @@ export const HistOrderDetails = () => {
       const orderDetails = allOrders.find(order => order._id === id)
       dispatch({ type: PUT_HIST_ORDER_TO_MODAL, payload: orderDetails });
 
-      return () => dispatch({ type: DELETE_HIST_ORDER_FROM_MODAL })
+      return () => {dispatch({ type: DELETE_HIST_ORDER_FROM_MODAL })}
     }
   }, [allOrders, dispatch, id]);
 
@@ -57,7 +64,7 @@ export const HistOrderDetails = () => {
 
   const ingredientToRender = React.useMemo(() => {
     if (selectedOrder && selectedOrder.ingredients.length > 0) {
-      const ingredientsWitnCounts = selectedOrder.ingredients.reduce((acc, item) => {
+      const ingredientsWitnCounts = selectedOrder.ingredients.reduce((acc: {[Property: string]: number}, item) => {
         acc.hasOwnProperty(item) ? acc[item] += 1 : acc[item] = 1;
         return acc;
       }, {})
@@ -67,9 +74,11 @@ export const HistOrderDetails = () => {
   }, [selectedOrder])
 
   const orderPrice = React.useMemo(() => {
-    if (selectedOrder && selectedOrder.ingredients.length !== 0 && allIngredients !== 0) {
+    if (selectedOrder && selectedOrder.ingredients.length !== 0 && allIngredients?.length !== 0) {
       return selectedOrder.ingredients.reduce((acc, item) => {
-        return acc + allIngredients.find(ingredient => ingredient._id === item).price
+        const foundIngredient = allIngredients.find(ingredient  => ingredient._id === item);
+        if (!!foundIngredient) return acc + foundIngredient.price;
+        return acc;
       }, 0)
     }
     return 'не известно'
@@ -85,7 +94,7 @@ export const HistOrderDetails = () => {
         <ul className={`${styles.listContainer} pr-6`}>
           {ingredientToRender.map((ingredient, index) => {
             const ingredientDetails = allIngredients.find(item => item._id === ingredient[0]);
-            return <HistOrderIngredientListElement key={index} image={ingredientDetails.image} name={ingredientDetails.name} price={ingredientDetails.price} count={ingredient[1]} />
+            if (!!ingredientDetails) return <HistOrderIngredientListElement key={index} image={ingredientDetails.image} name={ingredientDetails.name} price={ingredientDetails.price} count={ingredient[1]} />
           })}
         </ul>
         <div className={`${styles.flexLineSpaceBetween} mt-6`}>
@@ -97,7 +106,7 @@ export const HistOrderDetails = () => {
   }
 
   return (
-    <p>'Ничего'</p>
+    <p>'Нет данных'</p>
   )
 }
 

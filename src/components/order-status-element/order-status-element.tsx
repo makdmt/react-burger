@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { TOrderStatus, TOrderStatusCorrelation, TOrderStatusColors } from "../../services/types/data";
 
 
-export const OrderStatusElement: FC<{ status: TOrderStatus, extraClass?: string | undefined }> = ({ status, extraClass = undefined }) => {
+export const OrderStatusElement: FC<{ status: TOrderStatus | undefined, extraClass?: string | undefined }> = ({ status, extraClass = undefined }) => {
 
   const statuses: TOrderStatusCorrelation = {
     done: ['Выполнен', 'white'],
@@ -12,7 +12,7 @@ export const OrderStatusElement: FC<{ status: TOrderStatus, extraClass?: string 
   }
 
   const checkedStatus = React.useMemo<TOrderStatus>(() => {
-    if (statuses.hasOwnProperty(status)) {
+    if (status && statuses.hasOwnProperty(status)) {
       return status;
     } else {
       return 'default';

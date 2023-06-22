@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, FC } from 'react'
 
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from '../../services/types/index';
 
-import { useSearchParams, useLocation, useNavigate } from 'react-router-dom';
+import { useSearchParams, useLocation, useNavigate, URLSearchParamsInit } from 'react-router-dom';
 
 import { completeOrder, addIngredientToConstructor, RESET_BURGER } from '../../services/actions/burgerConstructor';
 
@@ -14,36 +14,41 @@ import BurgerConstructorElement from '../burger-constructor-element/burger-const
 import burgerConstructorStyles from './burger-constructor.module.css'
 
 
-function BurgerConstructor() {
+const BurgerConstructor: FC = () => {
 
   const { items: allIngredients, orderPostRequest } = useSelector(store => store.burgerConstructor);
   const currentBurgerIngredients = useSelector(store => store.burgerConstructor.currentBurgerItems);
 
-  const { authUser} = useSelector(state => state.userAuth);
+  const { authUser } = useSelector(state => state.userAuth);
 
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [currentBurgerUrlParams, setCurrentBurgerUrlParams ] = useSearchParams({});
+  const [currentBurgerUrlParams, setCurrentBurgerUrlParams] = useSearchParams({});
 
   React.useEffect(() => {
-    const params = currentBurgerIngredients.reduce((acc, item) => {
-      if (acc.hasOwnProperty(item.ingredientDetails._id)) {acc[item.ingredientDetails._id] += 1;
+    const params = currentBurgerIngredients.reduce((acc: { [Property: string]: number }, item) => {
+      if (acc.hasOwnProperty(item.ingredientDetails._id)) {
+        acc[item.ingredientDetails._id] += 1;
       } else {
-      acc[item.ingredientDetails._id] = 1;}
+        acc[item.ingredientDetails._id] = 1;
+      }
       return acc;
-    },{})
-    setCurrentBurgerUrlParams(params);
-  },[currentBurgerIngredients])
+    }, {})
+    const stringedParam: { [Property: string]: string } = {};
+    for (const key in params) stringedParam[key] = String(params[key])
+
+    setCurrentBurgerUrlParams(stringedParam);
+  }, [currentBurgerIngredients])
 
   const location = useLocation();
-
   const [toggledOrderBtn, setToggledOrderBtn] = useState(false);
+
 
   const [{ backgroundColor }, dropTarget] = useDrop({
     accept: "ingredient",
-    drop({ ingredientId }) {
+    drop({ ingredientId }: { ingredientId: string }) {
       dispatch(addIngredientToConstructor(ingredientId, allIngredients));
     },
     collect: monitor => ({
@@ -83,16 +88,16 @@ function BurgerConstructor() {
       return;
     }
     if (authUser) {
-    let burgerIngredientsId = currentBurgerIngredients.map(ingredient => ingredient.ingredientDetails._id);
-    dispatch(completeOrder(burgerIngredientsId));
+      let burgerIngredientsId = currentBurgerIngredients.map(ingredient => ingredient.ingredientDetails._id);
+      dispatch(completeOrder(burgerIngredientsId));
     } else {
-      navigate('/auth', {replace: true, state: {navigateAfter: `${location.pathname}${location.search}`, loginMessage: `Для отправки заказа, необходимо авторизоваться!`}});
+      navigate('/auth', { replace: true, state: { navigateAfter: `${location.pathname}${location.search}`, loginMessage: `Для отправки заказа, необходимо авторизоваться!` } });
     }
 
-  },[currentBurgerIngredients, authUser, toggledOrderBtn, location ])
+  }, [currentBurgerIngredients, authUser, toggledOrderBtn, location])
 
   return (
-    <section className={`${burgerConstructorStyles.burgerConstructor} mt-25`} style={{backgroundColor}}>
+    <section className={`${burgerConstructorStyles.burgerConstructor} mt-25`} style={{ backgroundColor }}>
       <header className={`${burgerConstructorStyles.burgerConstructorListItem} mb-4 pr-4`} >
         {!!currentBunIngredient && <ConstructorElement
           type='top'
@@ -102,10 +107,10 @@ function BurgerConstructor() {
           thumbnail={currentBunIngredient.ingredientDetails.image}
         />}
       </header>
-      <ul style={{ height: `${4 * 96}px`}} className={`${burgerConstructorStyles.burgerConstructorList}`} ref={dropTarget}>
-      {currentBurgerIngredients.length === 0 && (
-      <p className='text text_type_main-default' style={!toggledOrderBtn ? {} : {color: '#00CCCC'}}><LogoutIcon type={toggledOrderBtn ? "success" : "primary"} /> Выберите индгрединеты слева и перетащите сюда!</p>
-      )}
+      <ul style={{ height: `${4 * 96}px` }} className={`${burgerConstructorStyles.burgerConstructorList}`} ref={dropTarget}>
+        {currentBurgerIngredients.length === 0 && (
+          <p className='text text_type_main-default' style={!toggledOrderBtn ? {} : { color: '#00CCCC' }}><LogoutIcon type={toggledOrderBtn ? "success" : "primary"} /> Выберите индгрединеты слева и перетащите сюда!</p>
+        )}
         {currentBurgerIngredients.filter(ingredient => ingredient.ingredientDetails.type != 'bun').map((ingredient) => (
           <BurgerConstructorElement key={ingredient.uuid} ingredientUuid={ingredient.uuid} ingredient={ingredient.ingredientDetails} />
         ))}

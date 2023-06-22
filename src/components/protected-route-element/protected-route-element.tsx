@@ -6,7 +6,7 @@ import { getCookie } from "../../utils/cookie-set-get";
 
 import { Link, Navigate, useNavigate, useLocation } from 'react-router-dom';
 
-export const ProtectedRouteElement = ({element}: {element: React.ReactElement}): React.ReactNode => {
+export const ProtectedRouteElement = ({element}: {element?: JSX.Element}): JSX.Element | null => {
 
   const dispatch = useDispatch();
   const { fetchUserInfoRequest, fetchUserInfoFailed, updateAccessTokenRequest, logoutSuccess, authUser } = useSelector(state => state.userAuth);
@@ -34,5 +34,6 @@ export const ProtectedRouteElement = ({element}: {element: React.ReactElement}):
 
 
   if (fetchUserInfoRequest || updateAccessTokenRequest) return (<>Загрузка...</>)
-  if (authUser) return element
+  if (authUser && !!element) return element
+  return null;
 }

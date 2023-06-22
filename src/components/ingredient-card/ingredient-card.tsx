@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'
-import PropTypes from 'prop-types';
+import React, { FC, useState, useEffect } from 'react'
+// import PropTypes from 'prop-types';
 
-import { useSelector } from 'react-redux';
+import { useSelector } from '../../services/types/index';
 import { useNavigate } from 'react-router-dom';
 
 import { useDrag } from 'react-dnd/dist/hooks';
@@ -9,12 +9,11 @@ import { useDrag } from 'react-dnd/dist/hooks';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components/dist/ui/icons';
 import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 
-
 import ingredientCardStyles from './ingredient-card.module.css'
 
-import { ingredientPropType } from '../../utils/data'
+import { IIngredient } from '../../services/types/data';
 
-function IngredientCard(ingredient) {
+const IngredientCard: FC<IIngredient> = (ingredient) => {
 
   const currentBurgerIngredients = useSelector(store => store.burgerConstructor.currentBurgerItems);
 
@@ -39,7 +38,7 @@ function IngredientCard(ingredient) {
   }, [currentBurgerIngredients])
 
 
-  const openModalFunction = (productId) => () => {
+  const openModalFunction = (productId: string) => () => {
     navigate(`/ingredients/${productId}`, { replace: false, state: { background: '/' } });
   }
 
@@ -53,6 +52,6 @@ function IngredientCard(ingredient) {
   )
 }
 
-IngredientCard.propTypes = PropTypes.shape(ingredientPropType).isRequired;
+// IngredientCard.propTypes = PropTypes.shape(ingredientPropType).isRequired;
 
 export default IngredientCard;

@@ -1,13 +1,11 @@
-import React from "react";
-
-import { useSelector } from "react-redux";
+import React, { FC } from "react";
 import { Link } from 'react-router-dom';
 
-import { Input, EmailInput, PasswordInput, Button, InfoIcon } from "@ya.praktikum/react-developer-burger-ui-components";
+import { Button, InfoIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 
 import styles from './error-show.module.css'
 
-export function ErrorShow() {
+export const ErrorShow: FC = () => {
 
   return (
     <section className={`${styles.section}`}>

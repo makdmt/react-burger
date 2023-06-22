@@ -1,8 +1,28 @@
-export const socketMiddleware = (wsUrl, wsActions, getToken) => {
-  return store => {
-    let socket = null;
+import { AnyAction, Dispatch, MiddlewareAPI } from 'redux';
+import { rootReducer } from '../reducers';
 
-    return next => action => {
+interface IWsActions {
+  onOpen: string,
+  onClose: string,
+  onError: string,
+  onMessage: string,
+  wsSendMessage: string,
+  wsInit: string,
+}
+
+interface IWsReduxActions {
+  type: string;
+  payload?: string;
+}
+
+type RootState = ReturnType<typeof rootReducer>;
+
+
+export const socketMiddleware = (wsUrl: string, wsActions: IWsActions , getToken?: () => string) => {
+  return (store: MiddlewareAPI<Dispatch<AnyAction>, RootState>) => {
+    let socket: WebSocket | null = null;
+
+    return (next: Dispatch<IWsReduxActions> ) => (action: IWsReduxActions)=> {
       const { dispatch, getState } = store;
       const { type, payload } = action;
       const { wsInit, wsSendMessage, onOpen, onClose, onError, onMessage } = wsActions;

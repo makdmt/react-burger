@@ -1,21 +1,21 @@
-import React from "react";
-import PropTypes from 'prop-types';
+import React, {FC} from "react";
+// import PropTypes from 'prop-types';
 
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from '../../services/types/index';
 import { PUT_INGREDIENT_DETAILS_TO_MODAL, DELETE_INGREDIENT_DETAILS_FROM_MODAL } from "../../services/actions/burgerConstructor";
 
 import ingredientDetailsStyles from "./ingredient-details.module.css";
 
-export function IngredientDetails({ id }) {
+export const IngredientDetails: FC<{id: string | number}> = ({ id }) => {
 
   const allIngredients = useSelector(store => store.burgerConstructor.items);
   const dispatch = useDispatch();
 
   React.useEffect(() => {
     const ingredientDetails = allIngredients.find(product => product._id === id)
-    dispatch({ type: PUT_INGREDIENT_DETAILS_TO_MODAL, payload: ingredientDetails });
+    ingredientDetails && dispatch({ type: PUT_INGREDIENT_DETAILS_TO_MODAL, payload: ingredientDetails });
 
-    return () => dispatch({ type: DELETE_INGREDIENT_DETAILS_FROM_MODAL})
+    return () => {dispatch({ type: DELETE_INGREDIENT_DETAILS_FROM_MODAL})}
   }, [allIngredients, dispatch, id]);
 
   const selectedIngredient = useSelector(state => state.burgerConstructor.selectedIngredientDetails);
@@ -38,7 +38,7 @@ export function IngredientDetails({ id }) {
   )
 }
 
-IngredientDetails.propTypes = {
-  id: PropTypes.string.isRequired
-}
+// IngredientDetails.propTypes = {
+//   id: PropTypes.string.isRequired
+// }
 

@@ -3,18 +3,20 @@ import { useParams } from 'react-router-dom';
 
 import AppHeader from '../components/app-header/app-header';
 
-import styles from './order-hist-page.module.css'
-import { HistOrderDetails } from '../components/hist-order-details/hist-order-details';
+import styles from './ingredient-page.module.css'
+import { IngredientDetails } from '../components/ingredient-details/ingredient-details';
 
 
-export function OrderHistPage() {
+export function IngredientPage() {
+
+  const { id } = useParams();
 
   return (
     <>
       <AppHeader />
       <main className={styles.main}>
         <div className={styles.contentBlock}>
-        <HistOrderDetails />
+          {!!id && <IngredientDetails id={id} />}
         </div>
       </main>
     </>

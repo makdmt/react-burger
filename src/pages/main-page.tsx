@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from '../services/types/index'
 import { getItems, DELETE_ORDER_DETAILS_FROM_MODAL } from '../services/actions/burgerConstructor';
 
 import { Outlet } from 'react-router-dom';
@@ -26,16 +26,16 @@ export function MainPage(): JSX.Element {
 
   const orderDetails = useSelector(store => store.burgerConstructor.orderDetails);
 
-  const closeModalByClick = (event) => {
+  const closeModalByClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.currentTarget === event.target && dispatch({ type: DELETE_ORDER_DETAILS_FROM_MODAL });
   }
 
-  const closeModalByXbtn = (event) => {
+  const closeModalByXbtn = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     dispatch({ type: DELETE_ORDER_DETAILS_FROM_MODAL });
   }
 
-  const closeModalByEsc = (event) => {
+  const closeModalByEsc = (event: React.KeyboardEvent) => {
     event.key === 'Escape' && dispatch({ type: DELETE_ORDER_DETAILS_FROM_MODAL });
   }
 

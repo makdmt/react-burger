@@ -81,6 +81,7 @@ export type TUserData = {
   readonly email: string;
 }
 
+export type TUserLoginForm = Omit<TUserData, 'id' | 'name'>
 export type TUserDataForm = Omit<TUserData, 'id'>
 export type TUserAuthForm = Omit<TUserData, 'id' | 'name'>
 export type TUserDataServerResponce = Omit<TUserData, 'id' | 'password'>

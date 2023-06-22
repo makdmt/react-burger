@@ -12,13 +12,9 @@ export function ProfilePage() {
   return (
     <>
       <AppHeader />
-
       <main className={styles.main}>
-          <>
-              <UserProfileNavigation />
-              <UserDetailsForm />
-          </>
-
+        <UserProfileNavigation />
+        <UserDetailsForm />
       </main>
     </>
   )

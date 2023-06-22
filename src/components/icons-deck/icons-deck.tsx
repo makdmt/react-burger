@@ -1,7 +1,7 @@
-import React from 'react'
+import React, {FC} from 'react'
 import styles from './icons-deck.module.css'
 
-export function IconsDeck({ icons }) {
+export const IconsDeck: FC<{icons: Array<{image: string, name: string}>}> = ({ icons }) => {
 
   const iconsToRender = React.useMemo(() => {
     return icons.slice(0, 6)

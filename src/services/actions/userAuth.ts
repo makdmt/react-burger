@@ -11,7 +11,7 @@ import {
 } from "../../utils/burger-api";
 
 import { AppDispatch, AppThunk} from '../types';
-import { TUserDataServerResponce } from "../types/data";
+import { TUserDataServerResponce, TUserAuthForm, TUserDataForm } from "../types/data";
 
 
 import { setCookie, getCookie, deleteCookie } from "../../utils/cookie-set-get";
@@ -191,7 +191,7 @@ IRegistrateNewUserRequest
 
 
 
-const registrateNewUser: AppThunk = (authData) => {
+const registrateNewUser = (authData: TUserDataForm): AppThunk => {
   return function (dispatch: AppDispatch) {
     dispatch({
       type: REGISTRATION_REQUEST
@@ -219,7 +219,7 @@ const registrateNewUser: AppThunk = (authData) => {
   }
 };
 
-const login: AppThunk = (authData) => {
+const login = (authData: TUserAuthForm): AppThunk => {
   return function (dispatch: AppDispatch) {
     dispatch({
       type: AUTH_REQUEST
@@ -250,7 +250,7 @@ const login: AppThunk = (authData) => {
   }
 };
 
-const logout: AppThunk = () => {
+const logout = (): AppThunk => {
   return async function (dispatch: AppDispatch) {
     dispatch({
       type: LOGOUT_REQUEST
@@ -274,7 +274,7 @@ const logout: AppThunk = () => {
   }
 };
 
-const fetchUserInfo: AppThunk = () => {
+const fetchUserInfo = (): AppThunk => {
   return function (dispatch: AppDispatch) {
     dispatch({
       type: FETCH_USER_INFO_REQUEST
@@ -299,7 +299,7 @@ const fetchUserInfo: AppThunk = () => {
   }
 };
 
-const editUserInfo: AppThunk = (userData) => {
+const editUserInfo = (userData: TUserDataForm): AppThunk  => {
   return function (dispatch: AppDispatch) {
     dispatch({
       type: PATCH_USER_INFO_REQUEST
@@ -324,7 +324,7 @@ const editUserInfo: AppThunk = (userData) => {
   }
 };
 
-const updateAccessToken: AppThunk = () => {
+const updateAccessToken = (): AppThunk => {
   return function (dispatch: AppDispatch) {
     dispatch({
       type: UPDATE_ACCESS_TOKEN_REQUEST
@@ -347,7 +347,7 @@ const updateAccessToken: AppThunk = () => {
   }
 };
 
-const forgotUserPassword: AppThunk = (email: {email: string}) => {
+const forgotUserPassword = (email: {email: string}): AppThunk => {
   return function (dispatch: AppDispatch) {
     dispatch({
       type: PASSWORD_FORGOT_REQUEST
@@ -369,7 +369,7 @@ const forgotUserPassword: AppThunk = (email: {email: string}) => {
   }
 };
 
-const resetUserPassword: AppThunk = (resetPasswordData) => {
+const resetUserPassword= (resetPasswordData: {password: string, token: string}): AppThunk  => {
   return function (dispatch: AppDispatch) {
     dispatch({
       type: PASSWORD_RESET_REQUEST

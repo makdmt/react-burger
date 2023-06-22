@@ -1,7 +1,6 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch } from '../services/types/index'
 import { WS_USER_ORDERS_CONNECTION_START, WS_USER_ORDERS_CONNECTION_CLOSED } from '../services/actions/wsUserOrders';
 import { getCookie } from '../utils/cookie-set-get';
 
@@ -19,7 +18,7 @@ export function UserOrderHistPage() {
   React.useEffect(() => {
     if (!!getCookie('refreshToken')) {
       dispatch({ type: WS_USER_ORDERS_CONNECTION_START });
-      return () => dispatch({ type: WS_USER_ORDERS_CONNECTION_CLOSED });
+      return () => {dispatch({ type: WS_USER_ORDERS_CONNECTION_CLOSED })};
     }
   }, [dispatch])
 

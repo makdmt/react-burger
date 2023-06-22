@@ -9,12 +9,14 @@ import { Link, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { EmailInput, PasswordInput, Button, InfoIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import { ErrorShow } from "../error-show/error-show";
 
+import { TUserAuthForm } from "../../services/types/data";
+
 import styles from './login-form.module.css'
 
 
 export const LoginForm: FC<{}> = () => {
 
-  const { values: registrationData, onChange } = useForm({ email: '', password: '' });
+  const { values: registrationData, onChange } = useForm<TUserAuthForm>({ email: '', password: '' });
   const dispatch = useDispatch();
 
   const { authRequest, authIncorrectPassword, authServerFailed, authUser } = useSelector(state => state.userAuth);

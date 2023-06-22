@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from '../../services/types/index';
 import { getItems } from '../../services/actions/burgerConstructor';
 
 import { BrowserRouter, Routes, Route, useLocation, useSearchParams } from 'react-router-dom';
@@ -87,7 +87,7 @@ React.useEffect(() => {
   if (currentBurgerItems.length === 0) {
     dispatch({ type: RESET_BURGER })
     if (!!allIngredients.length && initialUrlParams.current.length > 0 && initialUrlParams.current.length < 400) {
-      const burgerConfigFromUrl = searchParamsToObject(initialUrlParams.current);
+      const burgerConfigFromUrl = searchParamsToObject(initialUrlParams.current) as {[Property: string]: number};
       // console.log(burgerConfigFromUrl);
       for (let key in burgerConfigFromUrl) {
         // console.log(`${key} значение ${burgerConfigFromUrl[key]}`)
@@ -103,7 +103,7 @@ React.useEffect(() => {
 
 React.useEffect(() => {
   dispatch({ type: WS_FEED_CONNECTION_START });
-  return () => dispatch({ type: WS_FEED_CONNECTION_CLOSED });
+  return () => {dispatch({ type: WS_FEED_CONNECTION_CLOSED })};
 }, [])
 
 

@@ -7,29 +7,20 @@ import { store } from "../..";
 import { Root } from "react-dom/client";
 import { TBurgerConstructorActions } from "../actions/burgerConstructor";
 import { TWsFeedActions } from "../actions/wsFeed";
+import { TWsUserOrdersActions } from "../actions/wsUserOrders";
 import { TUserAuthActions } from "../actions/userAuth";
 
 
-type TAppActions = TBurgerConstructorActions | TWsFeedActions | TUserAuthActions;
-
 export type RootState = ReturnType<typeof store.getState>;
-
-export type AppThunk<TReturn = void> = ActionCreator<ThunkAction<TReturn, RootState, Action, TAppActions>>;
-// export type AppThunk<TReturn = void> = ThunkAction<TReturn, RootState, Action, TAppActions>;
-
-// export type AppDispatch = ThunkDispatch<RootState, never, TAppActions>;
-// export const useDispatch = () => dispatchHook<AppDispatch>()
-
-
-
-// export type ApThunk = <ReturnType, Action, RootState, TAppActions>;
+type TAppActions = TBurgerConstructorActions | TWsFeedActions | TWsUserOrdersActions | TUserAuthActions;
+export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, RootState, Action, TAppActions>;
+export type AppDispatch = ThunkDispatch<RootState, Action, TAppActions>;
+// export type AppDispatch = typeof store.dispatch;
 
 export const useSelector: TypedUseSelectorHook<RootState> = selectorHook;
-export type AppDispatch = typeof store.dispatch;
+export const useDispatch = () => dispatchHook<AppDispatch>();
 // type DispatchFunc = () => AppDispatch
-// export type AppDispatch = ThunkDispatch< RootState, unknown, TAppActions >;
-// export const useDispatch = () => dispatchHook<AppDispatch | ThunkAction<void, Action, RootState, TAppActions>>();
-export const useDispatch = () => dispatchHook<any>();
 // export const useDispatch: DispatchFunc = dispatchHook;
+
 
 

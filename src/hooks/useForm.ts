@@ -1,11 +1,12 @@
 import React, {ChangeEvent, FormEventHandler} from "react";
 
+
 interface IFormInputsValues {
   [property: string]: string;
 }
 
-export function useForm(inputValues: IFormInputsValues): {
-  values: IFormInputsValues,
+export function useForm<T = IFormInputsValues>(inputValues: T): {
+  values: T,
   onChange: (event: ChangeEvent<HTMLInputElement>) => void,
   onReset: FormEventHandler<HTMLFormElement>,
 }

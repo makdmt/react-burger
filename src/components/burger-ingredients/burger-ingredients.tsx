@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux';
+import React, { FC } from 'react'
+import { useSelector, useDispatch } from '../../services/types/index';
 
 import { getItems } from '../../services/actions/burgerConstructor';
 
@@ -9,7 +9,7 @@ import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import burgerIngredientStyles from './burger-ingredients.module.css'
 
 
-function BurgerIngredients() {
+const BurgerIngredients: FC = () => {
 
   // useEffect(()=> {
   //   console.log('смонтировался')
@@ -27,11 +27,13 @@ function BurgerIngredients() {
 
   const [currentTab, setCurrentTab] = React.useState(0)
 
-  const scrollHandler = (e) => {
-    let visibleBlockTopCoordinate = e.target.getBoundingClientRect().y;
-    let visibleBlockHeight = e.target.getBoundingClientRect().height;
+  const scrollHandler = (e: React.UIEvent<HTMLElement, Event>) => {
 
-    const innerSections = Array.from(e.target.children);
+
+    let visibleBlockTopCoordinate = e.currentTarget.getBoundingClientRect().y;
+    let visibleBlockHeight = e.currentTarget.getBoundingClientRect().height;
+
+    const innerSections = Array.from(e.currentTarget.children);
 
     const distancesFromVisibleTop = innerSections.map((section) => {
       let innerSectionTopCoordinate = section.getBoundingClientRect().y;
@@ -81,7 +83,7 @@ function BurgerIngredients() {
       <div className={`${burgerIngredientStyles.tabContainer} mb-8`} >
         {sectionTitlesArr.map((category, index) => {
           return (
-            <Tab key={category[0]} value={index} active={currentTab === index}>{category[1]}</Tab>
+            <Tab key={category[0]} value={String(index)} active={currentTab === index} onClick={() => {}}>{category[1]}</Tab>
           )
         })}
       </div>

@@ -109,7 +109,7 @@ IGetItemsRequest
 | IDeleteHistOrderFromModal
 
 
-const getItems: AppThunk = () => {
+const getItems = (): AppThunk => {
   return function (dispatch: AppDispatch) {
     dispatch({
       type: GET_ITEMS_REQUEST
@@ -133,7 +133,7 @@ const getItems: AppThunk = () => {
 };
 
 
-const completeOrder: AppThunk = (ingredientsId: TingredientsId) => {
+const completeOrder = (ingredientsId: TingredientsId): AppThunk => {
   return function (dispatch: AppDispatch) {
     dispatch({
       type: POST_ORDER_REQUEST
@@ -156,14 +156,14 @@ const completeOrder: AppThunk = (ingredientsId: TingredientsId) => {
   }
 };
 
-const addIngredientToConstructor: AppThunk = (ingredientId: string, allIngredients: TAllIngredients, arrayIndex: number = 1) => (dispatch: AppDispatch) => {
+const addIngredientToConstructor = (ingredientId: string, allIngredients: TAllIngredients, arrayIndex: number = 1): AppThunk => (dispatch: AppDispatch) => {
   const uuid = uuidv4();
   const [foundIngredient] = allIngredients.filter(ingredient => ingredient._id === ingredientId);
   const addingIngredient = {ingredientDetails: foundIngredient, uuid};
   foundIngredient.type === 'bun' ? dispatch({ type: ADD_BUN_INGREDIENT_TO_BURGER, payload: addingIngredient, arrayIndex: arrayIndex}) : dispatch({ type: ADD_MAIN_INGREDIENT_TO_BURGER, payload: addingIngredient, arrayIndex: arrayIndex})
 }
 
-const removeIngredientFromConstructor: AppThunk = (uuid: string) => (dispatch: AppDispatch) => {
+const removeIngredientFromConstructor = (uuid: string): AppThunk => (dispatch: AppDispatch) => {
   dispatch({ type: REMOVE_IGREDIENT_FROM_BURGER, payload: uuid })
 }
 

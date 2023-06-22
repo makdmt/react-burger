@@ -1,6 +1,5 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { WS_FEED_CONNECTION_START, WS_FEED_CONNECTION_CLOSED } from '../services/actions/wsFeed'
+import { useSelector, useDispatch } from '../services/types/index'
 
 import { Outlet } from 'react-router-dom';
 
@@ -52,7 +51,7 @@ export function FeedPage(): JSX.Element {
       <main className={styles.main}>
         <h1 className={`text text_type_main-large mt-10 mb-5 ${styles.pageHeading}`}>Лента заказов</h1>
         {!wsFeedConnected && 'нет данных, подождите... или попробуйте обновить страницу'}
-        {wsFeedConnected && !!feedOrders && !!feedOrders.orders && <OrderHistory orders={ordersToFeed} />}
+        {wsFeedConnected && ordersToFeed && <OrderHistory orders={ordersToFeed} />}
         {wsFeedConnected && !!feedOrders && !!feedOrders.orders &&
           <div>
             <OrdersStatusesTable />

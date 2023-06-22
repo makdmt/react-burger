@@ -1,15 +1,24 @@
-import React from "react";
+import React, {FC, ReactPortal, ReactElement} from "react";
 import ReactDOM from 'react-dom'
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 
 import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 
 import ModalOverlay from "../modal-overlay/modal-overlay";
 import modalStyles from './modal.module.css'
 
-const rootHtml = document.getElementById('root');
+const rootHtml= document.getElementById('root') as HTMLElement;
 
-export function Modal({ props, children }) {
+interface IModal {
+  props: {
+    closeByEscFunc: () => void,
+    closeByClickFunc: () => void,
+    closeByXFunc: () => void,
+  },
+  children: ReactElement,
+}
+
+export const Modal = ({ props, children }: IModal): ReactPortal => {
 
   React.useEffect(() => {
     document.addEventListener("keydown", props.closeByEscFunc);
@@ -31,13 +40,13 @@ export function Modal({ props, children }) {
 }
 
 
-Modal.propTypes = {
-  props: PropTypes.shape({
-  closeByEscFunc: PropTypes.func.isRequired,
-  closeByClickFunc: PropTypes.func.isRequired,
-  closeByXFunc: PropTypes.func.isRequired
-  }),
+// Modal.propTypes = {
+//   props: PropTypes.shape({
+//   closeByEscFunc: PropTypes.func.isRequired,
+//   closeByClickFunc: PropTypes.func.isRequired,
+//   closeByXFunc: PropTypes.func.isRequired
+//   }),
 
-  children: PropTypes.element
-}
+//   children: PropTypes.element
+// }
 
