@@ -1,8 +1,6 @@
 import React, { FC } from 'react'
 import { useSelector, useDispatch } from '../../services/types/index';
 
-import { getItems } from '../../services/actions/burgerConstructor';
-
 import IngredientCard from '../ingredient-card/ingredient-card';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 
@@ -11,10 +9,6 @@ import burgerIngredientStyles from './burger-ingredients.module.css'
 
 const BurgerIngredients: FC = () => {
 
-  // useEffect(()=> {
-  //   console.log('смонтировался')
-  //   return () => {console.log('размонтировался')}
-  // },[])
 
   const products = useSelector(store => store.burgerConstructor.items);
 
@@ -75,6 +69,16 @@ const BurgerIngredients: FC = () => {
     // let sectionWithMinDistanceFromVisibleTop = distancesFromVisibleTop.findIndex(elm => elm === minDistanceFromVisibleTop);
   }
 
+  const tabClickHandler = React.useCallback((tabNumber: string): void => {
+    const scrolledContainer = document.querySelector(`.${burgerIngredientStyles.ingredientsSectionsConatiner}`);
+    if (scrolledContainer?.children) {
+      const targetsToScroll = Array.from(scrolledContainer.children);
+      const targetToScroll = targetsToScroll[parseInt(tabNumber)];
+      targetToScroll.scrollIntoView({ behavior: "smooth" });
+    }
+
+  }, [])
+
 
   return (
     <section className={burgerIngredientStyles.container}>
@@ -83,7 +87,7 @@ const BurgerIngredients: FC = () => {
       <div className={`${burgerIngredientStyles.tabContainer} mb-8`} >
         {sectionTitlesArr.map((category, index) => {
           return (
-            <Tab key={category[0]} value={String(index)} active={currentTab === index} onClick={() => {}}>{category[1]}</Tab>
+            <Tab key={category[0]} value={String(index)} onClick={tabClickHandler} active={currentTab === index} >{category[1]}</Tab>
           )
         })}
       </div>
@@ -92,7 +96,7 @@ const BurgerIngredients: FC = () => {
           return (
             <section className={burgerIngredientStyles.categorySection} key={index}>
               <h2 className={`${burgerIngredientStyles.categoryHeading} text text_type_main-medium mt-2 mb-6`}>{category[1]}</h2>
-              { products.filter((product) => { return product.type == category[0] }).map((product, index) => (<IngredientCard key={index} {...product} />)) }
+              {products.filter((product) => { return product.type == category[0] }).map((product, index) => (<IngredientCard key={index} {...product} />))}
             </section>)
         })}
       </div>

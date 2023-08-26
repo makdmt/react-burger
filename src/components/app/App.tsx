@@ -36,34 +36,7 @@ import { UserOrderHistPage } from '../../pages/user-order-hist-page';
 
 function App(): JSX.Element {
 
-  React.useEffect(() => {
-    fetch(`http://127.0.0.1:3000/parse`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-        // 'Content-Type': 'text/plain'
-      },
-      body: JSON.stringify({
-        domainName: 'https://test.com/'
-      }),
-    })
-      .then(res => console.log(res))
-  })
-
-  // React.useEffect(async () => {
-  //   const res = await axios.post('http://127.0.0.1:3001/', {
-  //     answer: 42
-  //   });
-  //   res.data;
-  // })
-
-  // React.useEffect(() => {
-  //   fetch(`http://127.0.0.1:3001`)
-  //     .then(res => console.log(res))
-  // },[])
-
 const location = useLocation();
-
 const background = location.state?.background || null;
 
 const { items: allIngredients, currentBurgerItems } = useSelector(store => store.burgerConstructor);
@@ -79,9 +52,6 @@ React.useEffect(() => {
 
 const initialUrlParams = React.useRef(location.search);
 
-// React.useEffect(() => {
-//   console.log('app смонтировался')
-// }, [])
 
 React.useEffect(() => {
   if (currentBurgerItems.length === 0) {

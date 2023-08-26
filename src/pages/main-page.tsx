@@ -35,7 +35,7 @@ export function MainPage(): JSX.Element {
     dispatch({ type: DELETE_ORDER_DETAILS_FROM_MODAL });
   }
 
-  const closeModalByEsc = (event: React.KeyboardEvent) => {
+  const closeModalByEsc = (event: KeyboardEvent) => {
     event.key === 'Escape' && dispatch({ type: DELETE_ORDER_DETAILS_FROM_MODAL });
   }
 

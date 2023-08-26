@@ -9,29 +9,33 @@ import modalStyles from './modal.module.css'
 
 const rootHtml = document.getElementById('root') as HTMLElement;
 
+// how to type HOCs https://medium.com/@jrwebdev/react-higher-order-component-patterns-in-typescript-42278f7590fb
+
 interface IWrappedComponentProps {
-  closeByEsc: (event: React.KeyboardEvent) => void,
+  closeByEsc: (event: KeyboardEvent) => void,
   closeByClickFunc: (event: React.MouseEvent<HTMLButtonElement>) => void,
   closeByX: (event: React.MouseEvent<HTMLButtonElement>) => void,
 }
 
 
-const withModal = (WrappedComponent: React.ComponentType<IWrappedComponentProps>) => {
-  return class WithModal extends React.Component<IWrappedComponentProps> {
+const withModal = <P extends object>(WrappedComponent: React.ComponentType<P>) => {
+  return class WithModal extends React.Component<P & IWrappedComponentProps> {
 
-    constructor(props: IWrappedComponentProps) {
+    constructor(props: P & IWrappedComponentProps) {
       super(props);
 
-      // this.closeByEsc = this.props.closeByEsc.bind(this);
+      this.closeByEsc = this.props.closeByEsc.bind(this);
     }
 
-    // componentDidMount() {
-    //   document.addEventListener("keydown", this.props.closeByEsc);
-    // }
+    closeByEsc: (event: KeyboardEvent) => void;
 
-    // componentWillUnmount() {
-    //   document.removeEventListener("keydown", this.props.closeByEsc);
-    // }
+    componentDidMount() {
+      document.addEventListener("keydown", this.props.closeByEsc);
+    }
+
+    componentWillUnmount() {
+      document.removeEventListener("keydown", this.props.closeByEsc);
+    }
 
 
     render() {
@@ -40,8 +44,8 @@ const withModal = (WrappedComponent: React.ComponentType<IWrappedComponentProps>
           <div className={modalStyles.modalScreen}>
             <ModalOverlay closeFunction={this.props.closeByClickFunc} />
             <div className={modalStyles.popupContainer} >
-              <button className={`${modalStyles.closeBtn}`} onClick={this.props.closeByX}><CloseIcon type="primary" /></button>
-              <WrappedComponent {...this.props as IWrappedComponentProps} />
+              <button title='close' type='button' className={`${modalStyles.closeBtn}`} onClick={this.props.closeByX}><CloseIcon type="primary" /></button>
+              <WrappedComponent {...this.props as P} />
             </div>
           </div>
         )
